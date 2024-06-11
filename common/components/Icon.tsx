@@ -311,6 +311,8 @@ export const icons = {
   event: Event,
 }
 
+export type IconType = keyof typeof icons
+
 export interface IconProps extends SvgIconProps {
   icon: keyof typeof icons
 }

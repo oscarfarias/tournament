@@ -3,13 +3,29 @@ import Autocomplete from 'common/components/Autocomplete'
 import { Option } from 'common/types'
 import GroupsFlow from 'modules/GroupsFlow'
 import { useState } from 'react'
-const groups: Option[] = []
+const groups: Option[] = [
+  {
+    label: `2018`,
+    value: `2018`,
+  },
+  {
+    label: `2019`,
+    value: `2019`,
+  },
+  {
+    label: `2020`,
+    value: `2020`,
+  },
+]
 
 const Groups = () => {
   const [isOpen, setIsOpen] = useState(false)
   return (
     <Grid container flexDirection="column">
-      <GroupsFlow isOpen={isOpen} />
+      {isOpen && (
+        <GroupsFlow onClose={() => setIsOpen(false)} isOpen={isOpen} />
+      )}
+
       <Grid container justifyContent="center">
         <Typography
           sx={{
@@ -40,7 +56,7 @@ const Groups = () => {
               mr: 2,
             }}
           >
-            Seleccione grupo:
+            Seleccione año:
           </Typography>
           <Autocomplete
             options={groups}

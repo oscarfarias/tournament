@@ -27,7 +27,7 @@ export default function Modal({
   actions,
 }: ModalProps): JSX.Element | null {
   return isOpen ? (
-    <Dialog open fullWidth maxWidth="sm">
+    <Dialog open fullWidth maxWidth="md">
       <DialogTitle>{title}</DialogTitle>
       <DialogContent sx={{ flexDirection: `column` }}>{children}</DialogContent>
       <DialogActions sx={{ justifyContent: `center` }}>

@@ -1,31 +1,50 @@
 import { Button, Grid } from '@mui/material'
-import { GroupsFlowProps } from './types'
+import { GroupsFlowActionsProps, GroupsFlowProps } from './types'
 import { Modal } from 'common/components'
+import Group from './Group'
+import { useState } from 'react'
+import Categories from './Categories'
 
-const ButtonActions = () => {
+const ButtonActions = ({
+  onClose,
+  onNext = () => null,
+}: GroupsFlowActionsProps) => {
   return (
     <Grid container justifyContent="space-between" flexDirection="row">
       <Grid item xs={4}>
-        <Button variant="outlined">Cancelar</Button>
+        <Button variant="outlined" onClick={onClose}>
+          Cancelar
+        </Button>
       </Grid>
       <Grid item xs={4}>
-        <Button>Siguiente</Button>
+        <Button onClick={onNext}>Siguiente</Button>
       </Grid>
     </Grid>
   )
 }
 
-const GroupsFlow = ({ isOpen }: GroupsFlowProps) => {
+const GroupsFlow = ({ isOpen, onClose }: GroupsFlowProps) => {
+  const [flow, setFlow] = useState(0)
   if (!isOpen) {
     return null
   }
+  const componentByFlow: { [key: number]: JSX.Element } = {
+    0: <Group />,
+    1: <Categories />,
+  }
+
   return (
     <Grid container>
       <Modal
+        onCancel={onClose}
         isOpen={isOpen}
-        actions={<ButtonActions />}
+        actions={
+          <ButtonActions onClose={onClose} onNext={() => setFlow(flow + 1)} />
+        }
         title="Crear grupo"
-      ></Modal>
+      >
+        {componentByFlow[flow]}
+      </Modal>
     </Grid>
   )
 }

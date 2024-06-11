@@ -3,5 +3,6 @@ import Accordion from './Accordion'
 import TextField from './TextField'
 import InputPassword from './InputPassword'
 import Modal from './Modal'
-
-export { Icon, Accordion, TextField, InputPassword, Modal }
+import Autocomplete from './Autocomplete'
+import Table from './TableMui'
+export { Icon, Accordion, TextField, InputPassword, Modal, Autocomplete, Table }
