@@ -1,11 +1,15 @@
 import { Button, Grid, Typography } from '@mui/material'
 import Autocomplete from 'common/components/Autocomplete'
 import { Option } from 'common/types'
+import GroupsFlow from 'modules/GroupsFlow'
+import { useState } from 'react'
 const groups: Option[] = []
 
 const Groups = () => {
+  const [isOpen, setIsOpen] = useState(false)
   return (
     <Grid container flexDirection="column">
+      <GroupsFlow isOpen={isOpen} />
       <Grid container justifyContent="center">
         <Typography
           sx={{
@@ -47,7 +51,7 @@ const Groups = () => {
           />
         </Grid>
         <Grid ml={2} item xs={2}>
-          <Button> Crear grupo</Button>
+          <Button onClick={() => setIsOpen(true)}> Crear grupo</Button>
         </Grid>
       </Grid>
     </Grid>

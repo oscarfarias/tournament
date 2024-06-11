@@ -10,11 +10,17 @@ const button = {
         props: { variant: `flat` },
         style: {
           background: `transparent`,
-          // color: `black`,
-
           '&:hover': {
             background: `transparent`,
-            //  color: `black`,
+          },
+        },
+      },
+      {
+        props: { variant: `outlined` },
+        style: {
+          background: `transparent`,
+          '&:hover': {
+            background: `transparent`,
           },
         },
       },
