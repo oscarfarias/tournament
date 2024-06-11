@@ -25,14 +25,13 @@ function responsiveFontSizes({
     },
   }
 }
-
 const FONT_PRIMARY = `Roboto`
-
 const typography = (color: string): Record<string, unknown> => ({
   fontFamily: FONT_PRIMARY,
   h1: {
     lineHeight: 1.167,
     fontSize: pxToRem(96),
+    color,
     letterSpacing: pxToRem(-1.5),
     ...responsiveFontSizes({
       sm: 96,
@@ -44,6 +43,7 @@ const typography = (color: string): Record<string, unknown> => ({
     },
   },
   h2: {
+    color,
     lineHeight: 1.2,
     fontSize: pxToRem(60),
     letterSpacing: pxToRem(-0.5),
@@ -57,6 +57,7 @@ const typography = (color: string): Record<string, unknown> => ({
     },
   },
   h3: {
+    color,
     lineHeight: 1.167,
     fontSize: pxToRem(48),
     '&>a': {
@@ -64,6 +65,7 @@ const typography = (color: string): Record<string, unknown> => ({
     },
   },
   h4: {
+    color,
     lineHeight: 1.235,
     fontSize: pxToRem(34),
     letterSpacing: pxToRem(0.5),
@@ -72,6 +74,7 @@ const typography = (color: string): Record<string, unknown> => ({
     },
   },
   h5: {
+    color,
     lineHeight: 1.334,
     fontSize: pxToRem(24),
     '&>a': {
@@ -79,6 +82,7 @@ const typography = (color: string): Record<string, unknown> => ({
     },
   },
   h6: {
+    color,
     lineHeight: 1.6,
     fontSize: pxToRem(20),
     letterSpacing: pxToRem(0.15),
@@ -87,6 +91,7 @@ const typography = (color: string): Record<string, unknown> => ({
     },
   },
   subtitle1: {
+    color,
     lineHeight: 1.75,
     fontSize: pxToRem(16),
     letterSpacing: pxToRem(0.15),
@@ -95,6 +100,7 @@ const typography = (color: string): Record<string, unknown> => ({
     },
   },
   subtitle2: {
+    color,
     lineHeight: 1.57,
     fontSize: pxToRem(14),
     letterSpacing: pxToRem(0.1),
@@ -103,6 +109,7 @@ const typography = (color: string): Record<string, unknown> => ({
     },
   },
   subtitle3: {
+    color,
     fontWeight: 400,
     lineHeight: `24px`,
     fontSize: pxToRem(16),
@@ -112,6 +119,7 @@ const typography = (color: string): Record<string, unknown> => ({
     },
   },
   subtitle4: {
+    color,
     fontWeight: 400,
     lineHeight: `12px`,
     fontSize: pxToRem(12),
@@ -121,6 +129,7 @@ const typography = (color: string): Record<string, unknown> => ({
     },
   },
   body1: {
+    color,
     lineHeight: 1.5,
     fontSize: pxToRem(16),
     letterSpacing: pxToRem(0.15),
@@ -134,6 +143,7 @@ const typography = (color: string): Record<string, unknown> => ({
     },
   },
   body2: {
+    color,
     lineHeight: 1.43,
     fontSize: pxToRem(14),
     letterSpacing: pxToRem(0.15),
@@ -147,6 +157,7 @@ const typography = (color: string): Record<string, unknown> => ({
     },
   },
   caption: {
+    color,
     lineHeight: 1.66,
     fontSize: pxToRem(12),
     letterSpacing: pxToRem(0.4),
@@ -155,6 +166,7 @@ const typography = (color: string): Record<string, unknown> => ({
     },
   },
   overline: {
+    color,
     lineHeight: 2.66,
     fontSize: pxToRem(12),
     letterSpacing: pxToRem(0.1),
@@ -163,6 +175,7 @@ const typography = (color: string): Record<string, unknown> => ({
     },
   },
   button: {
+    color,
     lineHeight: 1.75,
     fontSize: pxToRem(14),
     textTransform: `capitalize`,
@@ -171,6 +184,7 @@ const typography = (color: string): Record<string, unknown> => ({
     },
   },
   transition: {
+    color,
     lineHeight: 1.75,
     fontSize: `13px`,
     fontWeight: `bold`,

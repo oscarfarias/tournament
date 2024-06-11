@@ -7,7 +7,7 @@ const Header = (): JSX.Element => {
       sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
     >
       <Toolbar>
-        <Typography variant="h6" noWrap component="div">
+        <Typography sx={{ color: `white` }} variant="h6" noWrap component="div">
           Panel de Administración
         </Typography>
       </Toolbar>
