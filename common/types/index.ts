@@ -4,6 +4,7 @@ export * from './react-query'
 export * from './login'
 export * from './yup'
 export * from './category'
+export * from './group'
 
 export interface Option {
   label: string

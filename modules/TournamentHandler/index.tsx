@@ -17,40 +17,46 @@ interface CategoryProps {
   actions?: string
 }
 
-const columns: HeadCell<Partial<CategoryProps>>[] = [
-  {
-    title: `Año`,
-    key: `name`,
-  },
-  {
-    title: `# Grupos`,
-    key: `groups`,
-  },
-  {
-    title: `# Equipos`,
-    key: `teams`,
-  },
-  {
-    title: `Total Atletas`,
-    key: `athletes`,
-  },
-  {
-    title: `Acciones`,
-    key: `actions`,
-    render: () => (
-      <Grid container sx={{ width: `100px` }}>
-        <Button>Gestionar</Button>
-      </Grid>
-    ),
-  },
-]
-
 const TournamentHandler = () => {
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   useCategoriesQuery()
 
   const { categories } = useCategoryStore((state) => state)
+
+  const columns: HeadCell<Partial<CategoryProps>>[] = [
+    {
+      title: `Año`,
+      key: `name`,
+    },
+    {
+      title: `# Grupos`,
+      key: `groups`,
+    },
+    {
+      title: `# Equipos`,
+      key: `teams`,
+    },
+    {
+      title: `Total Atletas`,
+      key: `athletes`,
+    },
+    {
+      title: `Acciones`,
+      key: `actions`,
+      render: (category) => (
+        <Grid container sx={{ width: `100px` }}>
+          <Button
+            onClick={() =>
+              router.push(`${ROUTES.CATEGORY}/${category.name}${ROUTES.GROUPS}`)
+            }
+          >
+            Gestionar
+          </Button>
+        </Grid>
+      ),
+    },
+  ]
 
   const data: CategoryProps[] = useMemo(() => {
     if (categories.length === 0) {
