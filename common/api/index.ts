@@ -1,7 +1,12 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios'
 import https from 'https'
 import { TOKEN_KEY } from 'common/config/constants'
-import { AuthorizedUser, LoginProps, SerializedResponse } from 'common/types'
+import {
+  AuthorizedUser,
+  CategoriesProps,
+  LoginProps,
+  SerializedResponse,
+} from 'common/types'
 import { User, Category } from 'entities'
 
 const requestHandler = (config: AxiosRequestConfig): unknown => {
@@ -51,6 +56,9 @@ const API = {
     SerializedResponse<Category, { categories: string }>
   > => {
     return axiosInstance.get(`/categories`)
+  },
+  createCategory: async (props: CategoriesProps): Promise<Category> => {
+    return axiosInstance.post(`/categories`, props)
   },
 }
 export default API

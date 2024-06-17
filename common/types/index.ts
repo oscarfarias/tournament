@@ -3,6 +3,7 @@ export * from './validator'
 export * from './react-query'
 export * from './login'
 export * from './yup'
+export * from './category'
 
 export interface Option {
   label: string

@@ -1,8 +1,16 @@
 import { ReactElement } from 'react'
 import Layout from '../Layout'
 import { Grid, Typography } from '@mui/material'
-import { Button, TextField, Autocomplete } from 'common/components'
-import { Option } from 'common/types'
+import {
+  Button,
+  TextField,
+  Autocomplete,
+  FormikController,
+} from 'common/components'
+import { CategoriesProps, Option } from 'common/types'
+import useCategory from 'common/hooks/useCategory'
+import schema from 'common/schemas/category'
+import { useFormik } from 'formik'
 const groupTypes: Option[] = [
   {
     label: `Grupo único`,
@@ -23,6 +31,17 @@ const groupTypes: Option[] = [
 ]
 
 const Category = () => {
+  const { useCategoryMutation } = useCategory()
+  const categoryMutation = useCategoryMutation()
+  const formik = useFormik<CategoriesProps>({
+    initialValues: {
+      year: ``,
+      groups: ``,
+    },
+    validationSchema: schema,
+    onSubmit: async (fields, helper) =>
+      categoryMutation.mutateAsync(fields).then(() => helper.resetForm()),
+  })
   return (
     <Grid container flexDirection="column">
       <Grid container justifyContent="center">
@@ -58,7 +77,9 @@ const Category = () => {
               </Typography>
             </Grid>
             <Grid item xs={8}>
-              <TextField />
+              <FormikController formik={formik} name="year">
+                <TextField />
+              </FormikController>
             </Grid>
             <Grid container justifyContent="flex-end">
               <Typography
@@ -74,7 +95,9 @@ const Category = () => {
               </Typography>
             </Grid>
             <Grid item xs={8}>
-              <Autocomplete options={groupTypes} defaultValue="" />
+              <FormikController formik={formik} name="groups">
+                <Autocomplete options={groupTypes} defaultValue="" />
+              </FormikController>
             </Grid>
           </Grid>
         </Grid>
@@ -87,7 +110,12 @@ const Category = () => {
             width: `320px`,
           }}
         >
-          <Button>Siguiente</Button>
+          <Button
+            isLoading={categoryMutation.isLoading}
+            onClick={() => formik.handleSubmit()}
+          >
+            Siguiente
+          </Button>
         </Grid>
       </Grid>
     </Grid>
