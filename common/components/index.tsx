@@ -5,4 +5,14 @@ import InputPassword from './InputPassword'
 import Modal from './Modal'
 import Autocomplete from './Autocomplete'
 import Table from './TableMui'
-export { Icon, Accordion, TextField, InputPassword, Modal, Autocomplete, Table }
+import FormikController from './FormikController'
+export {
+  Icon,
+  Accordion,
+  TextField,
+  InputPassword,
+  Modal,
+  Autocomplete,
+  Table,
+  FormikController,
+}

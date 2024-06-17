@@ -57,7 +57,7 @@ const InputPassword: FC<InputPasswordProps> = ({
         onBlur={onBlur}
         onChange={onChange}
         onKeyDown={onKeyPressHandler}
-        sx={{ height: `40px`, ...sx }}
+        sx={{ height: `40px`, borderRadius: `8px`, ...sx }}
         endAdornment={
           <InputAdornment position="end">
             <IconButton
