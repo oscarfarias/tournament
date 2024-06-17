@@ -7,15 +7,15 @@ import { useRouter } from 'next/router'
 import { ROUTES } from 'common/config/constants'
 import Loading from './Loading'
 
-const publicRoutes: string[] = [`/login`]
+const publicRoutes: string[] = [`${ROUTES.LOGIN}`]
 export interface AuthCheckProps {
   children: React.ReactNode
 }
 
-const Redirect = (): JSX.Element => {
+const Redirect = ({ route }: { route: string }): JSX.Element => {
   const router = useRouter()
   useEffect(() => {
-    router.push(ROUTES.LOGIN)
+    router.push(route)
   }, [])
 
   return <Loading text="Redirecting..." />
@@ -23,6 +23,7 @@ const Redirect = (): JSX.Element => {
 
 const AuthCheck = ({ children }: AuthCheckProps): JSX.Element => {
   const { setUser, setToken, user } = useAuth()
+  console.log(`user:`, user)
   const router = useRouter()
   const currentUserQuery = useCurrentUserQuery()
   const isFetching = currentUserQuery.isFetching
@@ -41,6 +42,9 @@ const AuthCheck = ({ children }: AuthCheckProps): JSX.Element => {
     return !!user || publicRoutes.includes(router.pathname)
   }
 
+  const isLogin = router.pathname === ROUTES.LOGIN
+  const isAuthorizedUser = isAuthorized(user)
+
   useEffect(() => {
     handleUser(currentUserQuery.data)
   }, [currentUserQuery.data])
@@ -48,8 +52,11 @@ const AuthCheck = ({ children }: AuthCheckProps): JSX.Element => {
   if (isFetching) {
     return <Loading text="Loading..." />
   }
-  if (!isAuthorized(user)) {
-    return <Redirect />
+  if (!isAuthorizedUser) {
+    return <Redirect route={ROUTES.LOGIN} />
+  }
+  if (isLogin && user) {
+    return <Redirect route={ROUTES.INDEX} />
   }
 
   return <>{children}</>

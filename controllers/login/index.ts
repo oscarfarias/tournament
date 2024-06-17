@@ -32,6 +32,7 @@ export const getCurrentUser = async (
   req: ExtendedRequest,
   res: NextApiResponse,
 ): Promise<void> => {
+  console.log(`req:`, req)
   const user = req.user
   if (user) {
     successResponse<User>(res, user)

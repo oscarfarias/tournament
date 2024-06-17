@@ -8,7 +8,7 @@ const requestHandler = (config: AxiosRequestConfig): unknown => {
   if (config.headers) {
     if (typeof window !== `undefined`) {
       const token = window.localStorage.getItem(TOKEN_KEY) ?? ``
-      config.headers.Authorization = token
+      config.headers.Authorization = `Bearer ${token}`
     }
   }
   return config
