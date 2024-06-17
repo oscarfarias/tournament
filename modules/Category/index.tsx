@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 import Layout from '../Layout'
 import { Grid, Typography } from '@mui/material'
 import {
@@ -13,6 +13,8 @@ import schema from 'common/schemas/category'
 import { useFormik } from 'formik'
 import { useRouter } from 'next/router'
 import { ROUTES } from 'common/config/constants'
+import useCategoryStore from 'common/stores/useCategoryStore'
+import { isNumber } from 'lodash'
 
 const groupTypes: Option[] = [
   {
@@ -31,7 +33,20 @@ const groupTypes: Option[] = [
 
 const Category = () => {
   const router = useRouter()
+
   const { useCategoryMutation } = useCategory()
+  const { categories } = useCategoryStore((state) => state)
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      const lastCategory = categories[0]
+      const year = Number(lastCategory.year) + 1
+      if (isNumber(year)) {
+        formik.setFieldValue(`year`, year.toString())
+      }
+    }
+  }, [categories])
+
   const categoryMutation = useCategoryMutation({
     onSuccessCallback: (category) =>
       router.push(`${ROUTES.CATEGORY}/${category?.year}${ROUTES.GROUPS}`),
@@ -55,6 +70,7 @@ const Category = () => {
         .then(() => helper.resetForm())
     },
   })
+
   return (
     <Grid container flexDirection="column">
       <Grid container justifyContent="center">
