@@ -11,13 +11,10 @@ import { CategoriesProps, Option } from 'common/types'
 import useCategory from 'common/hooks/useCategory'
 import schema from 'common/schemas/category'
 import { useFormik } from 'formik'
+
 const groupTypes: Option[] = [
   {
     label: `Grupo único`,
-    value: 0,
-  },
-  {
-    label: `Grupo 1`,
     value: 1,
   },
   {
@@ -39,8 +36,18 @@ const Category = () => {
       groups: ``,
     },
     validationSchema: schema,
-    onSubmit: async (fields, helper) =>
-      categoryMutation.mutateAsync(fields).then(() => helper.resetForm()),
+    onSubmit: async (fields, helper) => {
+      const groupValue = groupTypes.find(
+        (group) => group.label === fields.groups,
+      )
+      const nextGroup = groupValue?.value ?? 1
+      categoryMutation
+        .mutateAsync({
+          ...fields,
+          groups: `${nextGroup}`,
+        })
+        .then(() => helper.resetForm())
+    },
   })
   return (
     <Grid container flexDirection="column">
@@ -76,7 +83,7 @@ const Category = () => {
                 Año de la categoría
               </Typography>
             </Grid>
-            <Grid item xs={8}>
+            <Grid item sx={{ display: `flex`, width: `300px` }}>
               <FormikController formik={formik} name="year">
                 <TextField />
               </FormikController>
@@ -94,9 +101,13 @@ const Category = () => {
                 Grupo
               </Typography>
             </Grid>
-            <Grid item xs={8}>
+            <Grid item sx={{ display: `flex`, width: `300px` }}>
               <FormikController formik={formik} name="groups">
-                <Autocomplete options={groupTypes} defaultValue="" />
+                <Autocomplete
+                  sx={{ width: `100%` }}
+                  options={groupTypes}
+                  defaultValue=""
+                />
               </FormikController>
             </Grid>
           </Grid>

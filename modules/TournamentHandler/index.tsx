@@ -59,7 +59,7 @@ const TournamentHandler = () => {
     return categories.map((category) => ({
       id: category.id,
       name: category.year,
-      groups: `0`,
+      groups: `${category?.groups?.length}`,
       teams: `0`,
       athletes: `0`,
     }))
