@@ -15,3 +15,8 @@ export enum ROUTES {
   LOGIN = `/login`,
   INDEX = `/`,
 }
+
+export enum ROLES {
+  ADMIN = `Admin`,
+  SUPERVISOR = `Supervisor`,
+}
