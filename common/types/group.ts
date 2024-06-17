@@ -1,4 +1,4 @@
 export interface GroupProps {
-  categoryId: string
   name: string
+  groupId: string
 }

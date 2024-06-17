@@ -25,6 +25,7 @@ export const getGroupsByYear = async (
   const groups = await groupRepository.find({
     category: category?.id,
   })
+
   const [groupsIds, groupsById] = serializeCollection({
     entity: groups,
   })
@@ -54,18 +55,11 @@ export const upsertGroup = async (
   req: ExtendedRequest,
   res: NextApiResponse,
 ): Promise<void> => {
-  const { categoryId, name } = req.body
-  const categoryRepository = getRepository(Category)
-  const category = await categoryRepository.findOne({
-    id: categoryId,
-  })
-  if (!category) {
-    errorResponse(res, `No se encontró la categoría`)
-    return
-  }
+  const { name, groupId } = req.body
+
   const groupRepository = getRepository(Group)
   const group = await groupRepository.findOne({
-    category: category?.id,
+    id: groupId,
   })
 
   if (group == null) {
@@ -77,9 +71,9 @@ export const upsertGroup = async (
     return
   }
   const nextGroup = {
-    ...group,
     name,
   }
+
   const em = getEntityManager()
   const groupRef = em.getReference(`Group`, group.id)
   wrap(groupRef).assign(nextGroup)

@@ -1,8 +1,7 @@
 import { Grid, Typography } from '@mui/material'
-import { Accordion, Table, TextField } from 'common/components'
+import { Table, TextField } from 'common/components'
 import { useMemo, useState } from 'react'
 import { HeadCell } from 'common/components/TableMui'
-import { Group } from 'entities'
 
 interface AthleteProps {
   id: string
@@ -103,51 +102,4 @@ const TeamList = () => {
   )
 }
 
-const GroupView = ({ group }: { group: Group }) => {
-  const [teams, setTeams] = useState(0)
-  const teamArray = Array.from({ length: teams }, (_, i) => i + 1)
-  const onTeamChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    if (value === ``) {
-      setTeams(0)
-    } else {
-      setTeams(Number(value))
-    }
-  }
-
-  return (
-    <Grid container flexDirection="column">
-      <Grid
-        container
-        sx={{
-          display: `flex`,
-        }}
-        flexDirection="row"
-        gap={2}
-        mb={2}
-      >
-        <Typography mt={1}>Nombre Grupo :</Typography>
-        <Grid item xs={5}>
-          <TextField defaultValue={group.name} />
-        </Grid>
-      </Grid>
-      <Grid container flexDirection="row" gap={2}>
-        <Typography mt={1}>Numero de equipos:</Typography>
-        <Grid item xs={5}>
-          <TextField onChange={onTeamChange} value={teams} />
-        </Grid>
-      </Grid>
-
-      <Grid container mt={2} flexDirection="column" ml={1} gap={1}>
-        {teamArray.length > 0 &&
-          teamArray.map((team) => (
-            <Accordion key={team} title={`Equipo ${team}`}>
-              <TeamList key={team} />
-            </Accordion>
-          ))}
-      </Grid>
-    </Grid>
-  )
-}
-
-export default GroupView
+export default TeamList

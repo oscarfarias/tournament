@@ -12,6 +12,7 @@ export const useGroups = (year?: string) => {
     setGroup,
     group,
     groupsById,
+    groupsIds,
   } = useGroupStore((state) => state)
 
   useEffect(() => {
@@ -30,5 +31,6 @@ export const useGroups = (year?: string) => {
     group,
     setGroup,
     groupsById,
+    groupsIds,
   }
 }

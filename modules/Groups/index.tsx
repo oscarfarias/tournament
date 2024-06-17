@@ -13,7 +13,7 @@ import Group from './Group'
 const Groups = () => {
   const router = useRouter()
   const year = router?.query?.year
-  const { groups, setGroup, groupsById } = useGroups(year as string)
+  const { groups, setGroup, groupsById, groupsIds } = useGroups(year as string)
   const [groupId, setGroupId] = useState(``)
 
   useEffect(() => {
@@ -34,16 +34,20 @@ const Groups = () => {
       <TabContext value={groupId}>
         <Box sx={{ borderBottom: 1, borderColor: `divider` }}>
           <TabList onChange={handleChange}>
-            {groups.length > 0 &&
-              groups.map((group) => (
-                <Tab key={group.id} label={group.name} value={group.id} />
+            {groupsIds.length > 0 &&
+              groupsIds.map((groupId) => (
+                <Tab
+                  key={groupId}
+                  label={groupsById[groupId].name}
+                  value={groupId}
+                />
               ))}
           </TabList>
         </Box>
-        {groups.length > 0 &&
-          groups.map((group) => (
-            <TabPanel key={group.id} value={group.id}>
-              <Group group={group} />
+        {groupsIds.length > 0 &&
+          groupsIds.map((groupId) => (
+            <TabPanel key={groupId} value={groupId}>
+              <Group group={groupsById[groupId]} />
             </TabPanel>
           ))}
       </TabContext>
