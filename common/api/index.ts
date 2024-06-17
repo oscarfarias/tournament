@@ -4,10 +4,11 @@ import { TOKEN_KEY } from 'common/config/constants'
 import {
   AuthorizedUser,
   CategoriesProps,
+  GroupProps,
   LoginProps,
   SerializedResponse,
 } from 'common/types'
-import { User, Category } from 'entities'
+import { User, Category, Group } from 'entities'
 
 const requestHandler = (config: AxiosRequestConfig): unknown => {
   if (config.headers) {
@@ -59,6 +60,14 @@ const API = {
   },
   createCategory: async (props: CategoriesProps): Promise<Category> => {
     return axiosInstance.post(`/categories`, props)
+  },
+  getGroupsByYear: async (
+    year?: string,
+  ): Promise<SerializedResponse<Group, { groups: string }>> => {
+    return axiosInstance.get(`/groups/category/${year}`)
+  },
+  upsertGroup: async (props: GroupProps): Promise<Group> => {
+    return axiosInstance.post(`/groups`, props)
   },
 }
 export default API
