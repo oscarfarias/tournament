@@ -5,14 +5,12 @@ import { expressjwt as jwt } from 'express-jwt'
 import Boom from '@hapi/boom'
 
 import { errorResponse } from './api'
-import { useORM } from './orm'
+import { getRepository, useORM } from './orm'
 import { pathToRegexp } from 'path-to-regexp'
 import NextCors from 'nextjs-cors'
-
 const unsecuredRoutes = [
   pathToRegexp(`/api/login`),
-  pathToRegexp(`/api/passwordChange/(.*)`),
-  { url: pathToRegexp(`/api/appointments/(.*)`), methods: [`GET`] },
+  { url: pathToRegexp(`/api/roles`), methods: [`GET`] },
 ]
 const unauthorizedStatus = 401
 export interface File {
@@ -57,6 +55,17 @@ const populateUser = async (
   next: NextHandler,
 ): Promise<void> => {
   req.user = null
+  if (req?.auth) {
+    const userRepository = getRepository(User)
+    req.user = await userRepository.findOne(
+      {
+        id: req.auth.id,
+      },
+      {
+        populate: [`role`],
+      },
+    )
+  }
   next()
 }
 

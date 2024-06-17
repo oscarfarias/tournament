@@ -1,8 +1,15 @@
-import { PrimaryKey, Entity, Property, Unique } from '@mikro-orm/core'
+import {
+  PrimaryKey,
+  Entity,
+  Property,
+  Unique,
+  ManyToOne,
+} from '@mikro-orm/core'
 
 import { CustomBaseEntity } from './BaseEntity'
 import { SoftDeletable } from 'mikro-orm-soft-delete'
 import uuid4 from 'uuid4'
+import { Role } from './Role'
 
 //CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
 @SoftDeletable(() => User, `deletedAt`, () => new Date())
@@ -19,6 +26,8 @@ export class User extends CustomBaseEntity {
   username!: string
   @Property()
   password!: string
+  @ManyToOne({ entity: () => Role })
+  role!: Role
 
   constructor() {
     super()

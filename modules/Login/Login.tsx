@@ -1,11 +1,33 @@
-import { Switch, TextField, Typography, Grid, Button } from '@mui/material'
+import { Switch, TextField, Typography, Grid } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import Image from 'next/image'
 import { FACEBOOK_ICON, GITHUB_ICON, GOOGLE_ICON } from 'common/assets'
 import { useRouter } from 'next/router'
+import useAuth from 'common/hooks/useAuth'
+import { LoginProps } from 'common/types/login'
+import { useFormik } from 'formik'
+import schema from 'common/schemas/login'
+import { FormikController, InputPassword, Button } from 'common/components'
 const Login = (): JSX.Element => {
   const theme = useTheme()
   const router = useRouter()
+
+  const { useLogIn } = useAuth()
+  const loginMutation = useLogIn({
+    onSuccessCallback: () => {
+      router.push(`/`)
+    },
+  })
+
+  const formik = useFormik<LoginProps>({
+    initialValues: {
+      username: ``,
+      password: ``,
+    },
+    validationSchema: schema,
+    onSubmit: async (fields, helper) =>
+      loginMutation.mutateAsync(fields).then(() => helper.resetForm()),
+  })
 
   return (
     <Grid
@@ -34,7 +56,7 @@ const Login = (): JSX.Element => {
           sx={{
             background: theme.gradients[0],
             width: `377px`,
-            height: `147px`,
+            height: `130px`,
             borderRadius: `8px`,
             display: `flex`,
             top: `-8%`,
@@ -43,7 +65,7 @@ const Login = (): JSX.Element => {
             alignItems: `center`,
           }}
         >
-          <Typography fontSize="22px" fontWeight="bold">
+          <Typography fontSize="22px" sx={{ color: `white` }} fontWeight="bold">
             Iniciar Sesión
           </Typography>
 
@@ -70,8 +92,16 @@ const Login = (): JSX.Element => {
           }}
         >
           <Grid item mt={18} p={3} flexDirection="column">
-            <TextField placeholder="Usuario" />
-            <TextField sx={{ marginTop: `12px` }} placeholder="Contraseña" />
+            <FormikController formik={formik} name="username">
+              <TextField placeholder="Usuario" />
+            </FormikController>
+            <FormikController formik={formik} name="password">
+              <InputPassword
+                sx={{ marginTop: `12px` }}
+                placeholder="Contraseña"
+                fullWidth
+              />
+            </FormikController>
             <Grid
               item
               sx={{
@@ -94,21 +124,21 @@ const Login = (): JSX.Element => {
             </Grid>
 
             <Button
-              onClick={() => router.push(`/`)}
+              onClick={() => formik.handleSubmit()}
               sx={{ marginTop: `30px`, color: `white` }}
+              isLoading={loginMutation.isLoading}
             >
               INICIAR SESION
             </Button>
             <Grid
-              item
+              container
               sx={{
-                marginTop: `8px`,
-                display: `flex`,
+                marginTop: `5px`,
                 justifyContent: `center`,
                 alignItems: `center`,
-
                 height: `80px`,
               }}
+              mb={3}
             >
               <Typography
                 fontSize="14px"

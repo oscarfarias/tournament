@@ -153,6 +153,7 @@ import {
   PowerRounded,
   PriorityHighRounded,
   Event,
+  LogoutRounded,
 } from '@mui/icons-material'
 export const icons = {
   add: AddRounded,
@@ -309,6 +310,7 @@ export const icons = {
   powerRounded: PowerRounded,
   priorityHighRounded: PriorityHighRounded,
   event: Event,
+  logout: LogoutRounded,
 }
 
 export type IconType = keyof typeof icons

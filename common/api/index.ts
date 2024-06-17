@@ -1,12 +1,14 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios'
 import https from 'https'
 import { TOKEN_KEY } from 'common/config/constants'
+import { AuthorizedUser, LoginProps } from 'common/types'
+import { User } from 'entities'
 
 const requestHandler = (config: AxiosRequestConfig): unknown => {
   if (config.headers) {
     if (typeof window !== `undefined`) {
       const token = window.localStorage.getItem(TOKEN_KEY) ?? ``
-      config.headers.Authorization = token
+      config.headers.Authorization = `Bearer ${token}`
     }
   }
   return config
@@ -38,5 +40,12 @@ axiosInstance.interceptors.response.use(responseHandler, (error) =>
   Promise.reject(error),
 )
 
-const API = {}
+const API = {
+  login: async (props: LoginProps): Promise<AuthorizedUser> => {
+    return axiosInstance.post(`/login`, props)
+  },
+  getCurrentUser: async (): Promise<User> => {
+    return axiosInstance.get(`/login/currentUser`)
+  },
+}
 export default API

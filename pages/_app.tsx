@@ -13,6 +13,7 @@ import '@fontsource/roboto/700.css'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import './GlobalStyles.css'
 import { Icon } from 'common/components'
+import AuthCheck from 'modules/AuthCheck'
 moment.locale(`es`)
 moment.tz.setDefault(`America/Santiago`)
 const clientSideEmotionCache = createEmotionCache()
@@ -59,7 +60,7 @@ function MyApp({
               warning: <Icon icon="warningAmberOutlined" />,
             }}
           >
-            {getLayout(<Component {...pageProps} />)}
+            <AuthCheck> {getLayout(<Component {...pageProps} />)}</AuthCheck>
           </SnackbarProvider>
         </ThemeConfig>
       </QueryClientProvider>

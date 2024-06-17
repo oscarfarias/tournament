@@ -1,6 +1,15 @@
 import { NextApiRequest, NextApiResponse, NextApiHandler } from 'next'
-import { MikroORM, RequestContext } from '@mikro-orm/core'
-import { EntityManager } from '@mikro-orm/postgresql'
+import {
+  EntityName,
+  GetRepository,
+  MikroORM,
+  RequestContext,
+} from '@mikro-orm/core'
+import {
+  EntityManager,
+  EntityRepository,
+  SqlEntityRepository,
+} from '@mikro-orm/postgresql'
 import config from '../../config/mikro-orm'
 import { NextHandler } from 'next-connect'
 
@@ -38,4 +47,11 @@ export function getEntityManager(): EntityManager {
       `Entity manager not found. Are you in a 'withORM'-wrapped Context?`,
     )
   return em
+}
+export function getRepository<
+  T extends object,
+  U extends EntityRepository<T> = SqlEntityRepository<T>,
+>(entityName: EntityName<T>): GetRepository<T, U> {
+  const em = getEntityManager()
+  return em.getRepository(entityName)
 }

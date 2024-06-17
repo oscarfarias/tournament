@@ -22,10 +22,11 @@ export function errorResponse(res: NextApiResponse, error: unknown): void {
   const formattedError = Boom.isBoom(error)
     ? error
     : Boom.badImplementation(`Ha ocurrido un error inesperado.`, { error })
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { statusCode, message } = formattedError.output.payload
   res.statusCode = statusCode
   res.setHeader(`Content-Type`, `application/json`)
-  res.end(JSON.stringify({ success: false, error: message, formattedError }))
+  res.end(JSON.stringify({ success: false, error, formattedError }))
 }
 
 export async function methodHandler(

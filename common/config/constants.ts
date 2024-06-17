@@ -10,3 +10,13 @@ export const laneColors: Record<string, string> = {
 }
 
 export const drawerWidth = 240
+
+export enum ROUTES {
+  LOGIN = `/login`,
+  INDEX = `/`,
+}
+
+export enum ROLES {
+  ADMIN = `Admin`,
+  SUPERVISOR = `Supervisor`,
+}
