@@ -56,7 +56,7 @@ const Login = (): JSX.Element => {
           sx={{
             background: theme.gradients[0],
             width: `377px`,
-            height: `147px`,
+            height: `130px`,
             borderRadius: `8px`,
             display: `flex`,
             top: `-8%`,
@@ -130,15 +130,14 @@ const Login = (): JSX.Element => {
               INICIAR SESION
             </Button>
             <Grid
-              item
+              container
               sx={{
-                marginTop: `8px`,
-                display: `flex`,
+                marginTop: `5px`,
                 justifyContent: `center`,
                 alignItems: `center`,
-
                 height: `80px`,
               }}
+              mb={3}
             >
               <Typography
                 fontSize="14px"

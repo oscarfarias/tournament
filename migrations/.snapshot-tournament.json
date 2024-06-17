@@ -23,7 +23,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "default": "now()",
           "mappedType": "datetime"
         },
@@ -34,7 +34,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "default": "now()",
           "mappedType": "datetime"
         },
@@ -45,7 +45,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 6,
+          "length": 0,
           "default": "null",
           "mappedType": "datetime"
         },
@@ -104,7 +104,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "default": "now()",
           "mappedType": "datetime"
         },
@@ -115,7 +115,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "default": "now()",
           "mappedType": "datetime"
         },
@@ -126,7 +126,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 6,
+          "length": 0,
           "default": "null",
           "mappedType": "datetime"
         },
@@ -192,6 +192,85 @@
       "columns": {
         "id": {
           "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 0,
+          "default": "now()",
+          "mappedType": "datetime"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 0,
+          "default": "now()",
+          "mappedType": "datetime"
+        },
+        "deletedAt": {
+          "name": "deletedAt",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 0,
+          "default": "null",
+          "mappedType": "datetime"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        }
+      },
+      "name": "Roles",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "Roles_deletedAt_unique",
+          "columnNames": [
+            "deletedAt"
+          ],
+          "composite": false,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "Roles_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
           "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
@@ -207,7 +286,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "default": "now()",
           "mappedType": "datetime"
         },
@@ -218,7 +297,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "default": "now()",
           "mappedType": "datetime"
         },
@@ -229,7 +308,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 6,
+          "length": 0,
           "default": "null",
           "mappedType": "datetime"
         },
@@ -310,7 +389,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "default": "now()",
           "mappedType": "datetime"
         },
@@ -321,7 +400,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "default": "now()",
           "mappedType": "datetime"
         },
@@ -332,7 +411,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 6,
+          "length": 0,
           "default": "null",
           "mappedType": "datetime"
         },
@@ -442,7 +521,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "default": "now()",
           "mappedType": "datetime"
         },
@@ -453,7 +532,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "default": "now()",
           "mappedType": "datetime"
         },
@@ -464,7 +543,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 6,
+          "length": 0,
           "default": "null",
           "mappedType": "datetime"
         },
@@ -484,7 +563,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "default": "now()",
           "mappedType": "datetime"
         },
@@ -617,7 +696,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "default": "now()",
           "mappedType": "datetime"
         },
@@ -628,7 +707,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "default": "now()",
           "mappedType": "datetime"
         },
@@ -639,7 +718,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 6,
+          "length": 0,
           "default": "null",
           "mappedType": "datetime"
         },
@@ -776,7 +855,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "default": "now()",
           "mappedType": "datetime"
         },
@@ -787,7 +866,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "default": "now()",
           "mappedType": "datetime"
         },
@@ -798,7 +877,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 6,
+          "length": 0,
           "default": "null",
           "mappedType": "datetime"
         },
@@ -836,7 +915,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "mappedType": "datetime"
         },
         "teamId": {
@@ -907,7 +986,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "default": "now()",
           "mappedType": "datetime"
         },
@@ -918,7 +997,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "default": "now()",
           "mappedType": "datetime"
         },
@@ -929,7 +1008,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 6,
+          "length": 0,
           "default": "null",
           "mappedType": "datetime"
         },
@@ -968,6 +1047,15 @@
           "primary": false,
           "nullable": false,
           "mappedType": "string"
+        },
+        "roleId": {
+          "name": "roleId",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
         }
       },
       "name": "Users",
@@ -994,7 +1082,20 @@
         }
       ],
       "checks": [],
-      "foreignKeys": {}
+      "foreignKeys": {
+        "Users_roleId_foreign": {
+          "constraintName": "Users_roleId_foreign",
+          "columnNames": [
+            "roleId"
+          ],
+          "localTableName": "public.Users",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Roles",
+          "updateRule": "cascade"
+        }
+      }
     }
   ]
 }
