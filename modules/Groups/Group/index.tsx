@@ -10,6 +10,7 @@ import useGroupStore from 'common/hooks/useGroups/store'
 const GroupView = ({ group }: { group: Group }) => {
   const [teams, setTeams] = useState(0)
   const [groupName, setGroupName] = useState(group.name)
+
   const { groupsById, setGroupsById, setGroup } = useGroupStore(
     (state) => state,
   )
@@ -27,6 +28,7 @@ const GroupView = ({ group }: { group: Group }) => {
     }
     setGroupsById(nextGroupsById)
     setGroup(updatedGroup)
+    setGroupName(updatedGroup.name)
   }
 
   const groupMutation = useGroupMutation({
@@ -68,7 +70,7 @@ const GroupView = ({ group }: { group: Group }) => {
       >
         <Typography mt={1}>Nombre Grupo :</Typography>
         <Grid item xs={5}>
-          <TextField value={groupName} onChange={onGroupNameChange} />
+          <TextField defaultValue={group.name} onChange={onGroupNameChange} />
         </Grid>
       </Grid>
       <Grid container flexDirection="row" gap={2}>

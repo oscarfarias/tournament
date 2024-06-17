@@ -1,5 +1,5 @@
 import { Grid } from '@mui/material'
-import { ReactElement, useEffect } from 'react'
+import { ReactElement } from 'react'
 import Layout from '../Layout'
 import { useRouter } from 'next/router'
 import { useGroups } from 'common/hooks/useGroups'
@@ -13,15 +13,8 @@ import Group from './Group'
 const Groups = () => {
   const router = useRouter()
   const year = router?.query?.year
-  const { groups, setGroup, groupsById, groupsIds } = useGroups(year as string)
-  const [groupId, setGroupId] = useState(``)
-
-  useEffect(() => {
-    if (groups.length > 0 && groupId === ``) {
-      const group = groups[0]
-      setGroupId(group.id)
-    }
-  }, [groupId, groups])
+  const { setGroup, groupsById, groupsIds } = useGroups(year as string)
+  const [groupId, setGroupId] = useState(`0`)
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setGroupId(newValue)
@@ -35,18 +28,18 @@ const Groups = () => {
         <Box sx={{ borderBottom: 1, borderColor: `divider` }}>
           <TabList onChange={handleChange}>
             {groupsIds.length > 0 &&
-              groupsIds.map((groupId) => (
+              groupsIds.map((groupId, index) => (
                 <Tab
                   key={groupId}
                   label={groupsById[groupId].name}
-                  value={groupId}
+                  value={`${index}`}
                 />
               ))}
           </TabList>
         </Box>
         {groupsIds.length > 0 &&
-          groupsIds.map((groupId) => (
-            <TabPanel key={groupId} value={groupId}>
+          groupsIds.map((groupId, index) => (
+            <TabPanel key={groupId} value={`${index}`}>
               <Group group={groupsById[groupId]} />
             </TabPanel>
           ))}
