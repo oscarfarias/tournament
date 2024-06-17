@@ -18,7 +18,7 @@ const groups: Option[] = [
   },
 ]
 
-const Groups = () => {
+const Categories = () => {
   const [isOpen, setIsOpen] = useState(false)
   return (
     <Grid container flexDirection="column">
@@ -56,7 +56,7 @@ const Groups = () => {
               mr: 2,
             }}
           >
-            Seleccione año:
+            Seleccione categoría:
           </Typography>
           <Autocomplete
             options={groups}
@@ -74,4 +74,4 @@ const Groups = () => {
   )
 }
 
-export default Groups
+export default Categories

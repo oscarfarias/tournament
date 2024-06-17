@@ -13,6 +13,7 @@ interface AthleteProps {
   name: string
   lastName: string
   ci: string
+  shirtNumber: string
 }
 const columns: HeadCell<AthleteProps>[] = [
   {
@@ -46,10 +47,20 @@ const columns: HeadCell<AthleteProps>[] = [
       </Grid>
     ),
   },
+  {
+    title: `# Camiseta`,
+    key: `shirtNumber`,
+    render: () => (
+      <Grid container>
+        <TextField />
+      </Grid>
+    ),
+  },
 ]
 
 const TeamList = () => {
   const [athletes, setAthletes] = useState(0)
+  const [teamName, setTeamName] = useState(``)
   const data = useMemo(() => {
     const data = Array.from({ length: athletes }, (_, i) => {
       return {
@@ -57,6 +68,7 @@ const TeamList = () => {
         name: ``,
         lastName: ``,
         ci: ``,
+        shirtNumber: ``,
       }
     })
     return data
@@ -69,9 +81,19 @@ const TeamList = () => {
       setAthletes(Number(value))
     }
   }
+  const onTeamNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setTeamName(value)
+  }
 
   return (
     <Grid container>
+      <Grid container flexDirection="row" gap={2}>
+        <Typography mt={1}>Nombre del equipo:</Typography>
+        <Grid item xs={5}>
+          <TextField onChange={onTeamNameChange} value={teamName} />
+        </Grid>
+      </Grid>
       <Grid container mt={1} flexDirection="row" gap={2}>
         <Typography mt={1}>Cantidad de atletas:</Typography>
         <Grid item xs={5}>
@@ -86,20 +108,8 @@ const TeamList = () => {
 }
 
 const CategoriesList = () => {
-  const [categories, setCategories] = useState(0)
   const [teams, setTeams] = useState(0)
-
-  const array = Array.from({ length: categories }, (_, i) => i + 1)
   const teamArray = Array.from({ length: teams }, (_, i) => i + 1)
-
-  const onTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    if (value === ``) {
-      setCategories(0)
-    } else {
-      setCategories(Number(value))
-    }
-  }
   const onTeamChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     if (value === ``) {
@@ -126,38 +136,17 @@ const CategoriesList = () => {
         </Grid>
       </Grid>
       <Grid container flexDirection="row" gap={2}>
-        <Typography mt={1}>Numero de categorias:</Typography>
+        <Typography mt={1}>Numero de equipos:</Typography>
         <Grid item xs={5}>
-          <TextField onChange={onTextChange} value={categories} />
+          <TextField onChange={onTeamChange} value={teams} />
         </Grid>
       </Grid>
 
       <Grid container mt={2} flexDirection="column" ml={1} gap={1}>
-        {array.length > 0 &&
-          array.map((item) => (
-            <Accordion key={item} title={`Categoria ${item}`}>
-              <Grid container flexDirection="column">
-                <Grid container mt={1} key={item} flexDirection="row" gap={2}>
-                  <Typography mt={1}>Nombre categoria #{item}:</Typography>
-                  <Grid item xs={5}>
-                    <TextField />
-                  </Grid>
-                </Grid>
-                <Grid container mt={2} flexDirection="row" gap={2}>
-                  <Typography mt={1}>Numero de Equipos:</Typography>
-                  <Grid item xs={5}>
-                    <TextField onChange={onTeamChange} value={teams} />
-                  </Grid>
-                </Grid>
-                <Grid container mt={2} flexDirection="column" gap={2}>
-                  {teamArray.length > 0 &&
-                    teamArray.map((team) => (
-                      <Accordion key={team} title={`Equipo ${team}`}>
-                        <TeamList key={team} />
-                      </Accordion>
-                    ))}
-                </Grid>
-              </Grid>
+        {teamArray.length > 0 &&
+          teamArray.map((team) => (
+            <Accordion key={team} title={`Equipo ${team}`}>
+              <TeamList key={team} />
             </Accordion>
           ))}
       </Grid>

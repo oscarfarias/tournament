@@ -1,9 +1,9 @@
 import { ReactElement } from 'react'
 import Layout from '../Layout'
-import Groups from 'modules/Groups'
+import Categories from 'modules/Categories'
 
 const Home = (): JSX.Element => {
-  return <Groups />
+  return <Categories />
 }
 Home.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>

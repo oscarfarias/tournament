@@ -3,7 +3,7 @@ import { GroupsFlowActionsProps, GroupsFlowProps } from './types'
 import { Modal } from 'common/components'
 import Group from './Group'
 import { useState } from 'react'
-import Categories from './Categories'
+import Teams from './Teams'
 
 const ButtonActions = ({
   onClose,
@@ -30,7 +30,7 @@ const GroupsFlow = ({ isOpen, onClose }: GroupsFlowProps) => {
   }
   const componentByFlow: { [key: number]: JSX.Element } = {
     0: <Group />,
-    1: <Categories />,
+    1: <Teams />,
   }
 
   return (
