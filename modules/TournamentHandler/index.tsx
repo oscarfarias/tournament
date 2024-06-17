@@ -2,9 +2,11 @@ import { Button, Grid, Typography } from '@mui/material'
 import { Table } from 'common/components'
 import { HeadCell } from 'common/components/TableMui'
 import { ROUTES } from 'common/config/constants'
+import useCategoriesQuery from 'common/queries/useCategoriesQuery'
+import useCategoryStore from 'common/stores/useCategoryStore'
 import GroupsFlow from 'modules/GroupsFlow'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 interface CategoryProps {
   id: string
@@ -43,33 +45,26 @@ const columns: HeadCell<Partial<CategoryProps>>[] = [
   },
 ]
 
-const data: CategoryProps[] = [
-  {
-    id: `1`,
-    name: `2018`,
-    groups: `5`,
-    teams: `10`,
-    athletes: `50`,
-  },
-  {
-    id: `2`,
-    name: `2019`,
-    groups: `5`,
-    teams: `10`,
-    athletes: `50`,
-  },
-  {
-    id: `3`,
-    name: `2020`,
-    groups: `5`,
-    teams: `10`,
-    athletes: `50`,
-  },
-]
-
 const TournamentHandler = () => {
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
+  useCategoriesQuery()
+
+  const { categories } = useCategoryStore((state) => state)
+
+  const data: CategoryProps[] = useMemo(() => {
+    if (categories.length === 0) {
+      return []
+    }
+    return categories.map((category) => ({
+      id: category.id,
+      name: category.year,
+      groups: `0`,
+      teams: `0`,
+      athletes: `0`,
+    }))
+  }, [categories])
+
   return (
     <Grid container flexDirection="column">
       {isOpen && (

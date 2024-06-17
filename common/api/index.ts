@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios'
 import https from 'https'
 import { TOKEN_KEY } from 'common/config/constants'
-import { AuthorizedUser, LoginProps } from 'common/types'
+import { AuthorizedUser, LoginProps, SerializedResponse } from 'common/types'
 import { User, Category } from 'entities'
 
 const requestHandler = (config: AxiosRequestConfig): unknown => {
@@ -47,7 +47,9 @@ const API = {
   getCurrentUser: async (): Promise<User> => {
     return axiosInstance.get(`/login/currentUser`)
   },
-  getCategories: async (): Promise<Category[]> => {
+  getCategories: async (): Promise<
+    SerializedResponse<Category, { categories: string }>
+  > => {
     return axiosInstance.get(`/categories`)
   },
 }
