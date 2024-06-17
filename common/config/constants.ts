@@ -14,6 +14,7 @@ export const drawerWidth = 240
 export enum ROUTES {
   LOGIN = `/login`,
   INDEX = `/`,
+  CATEGORY = `/category`,
 }
 
 export enum ROLES {
