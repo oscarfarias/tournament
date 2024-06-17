@@ -4,9 +4,8 @@ import { HeadCell } from 'common/components/TableMui'
 import { ROUTES } from 'common/config/constants'
 import useCategoriesQuery from 'common/queries/useCategoriesQuery'
 import useCategoryStore from 'common/stores/useCategoryStore'
-import GroupsFlow from 'modules/GroupsFlow'
 import { useRouter } from 'next/router'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 interface CategoryProps {
   id: string
@@ -19,7 +18,7 @@ interface CategoryProps {
 
 const TournamentHandler = () => {
   const router = useRouter()
-  const [isOpen, setIsOpen] = useState(false)
+
   useCategoriesQuery()
 
   const { categories } = useCategoryStore((state) => state)
@@ -73,24 +72,6 @@ const TournamentHandler = () => {
 
   return (
     <Grid container flexDirection="column">
-      {isOpen && (
-        <GroupsFlow onClose={() => setIsOpen(false)} isOpen={isOpen} />
-      )}
-      <Grid
-        container
-        mt={2}
-        sx={{
-          flexDirection: `row`,
-
-          width: `80%`,
-          alignSelf: `center`,
-        }}
-      >
-        <Grid ml={2} item xs={2}>
-          <Button onClick={() => setIsOpen(true)}> Crear grupo</Button>
-        </Grid>
-      </Grid>
-
       <Grid container flexDirection="row" justifyContent="space-between">
         <Typography
           variant="h5"
