@@ -23,7 +23,6 @@ export class Category extends CustomBaseEntity {
   year!: string
   @OneToMany(() => Group, (group) => group.category)
   groups = new Collection<Group>(this)
-
   constructor() {
     super()
   }
