@@ -33,7 +33,7 @@ const useAuth = () => {
         setUser(user)
         setToken(token)
         localStorage.setItem(TOKEN_KEY, token)
-        enqueueSnackbar(`Welcome ${user.firstName}`, { variant: `success` })
+        enqueueSnackbar(`Bienvenido ${user.firstName}`, { variant: `success` })
         onSuccessCallback && onSuccessCallback()
       },
       onError: (error) => {

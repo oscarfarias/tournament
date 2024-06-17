@@ -29,9 +29,23 @@ const input = {
           width: `100%`,
           backgroundColor: `white`,
         },
+
         width: `100%`,
       },
     },
   },
+  MuiOutlinedInput: {
+    styleOverrides: {
+      input: {
+        '&:-webkit-autofill': {
+          '-webkit-box-shadow': `none`,
+          '-webkit-text-fill-color': `inherit`,
+          caretColor: `inherit`,
+        },
+        boxSizing: `inherit`,
+      },
+    },
+  },
 }
+
 export default input

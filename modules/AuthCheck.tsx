@@ -18,12 +18,11 @@ const Redirect = ({ route }: { route: string }): JSX.Element => {
     router.push(route)
   }, [])
 
-  return <Loading text="Redirecting..." />
+  return <Loading text="Redireccionando..." />
 }
 
 const AuthCheck = ({ children }: AuthCheckProps): JSX.Element => {
   const { setUser, setToken, user } = useAuth()
-  console.log(`user:`, user)
   const router = useRouter()
   const currentUserQuery = useCurrentUserQuery()
   const isFetching = currentUserQuery.isFetching
@@ -50,7 +49,7 @@ const AuthCheck = ({ children }: AuthCheckProps): JSX.Element => {
   }, [currentUserQuery.data])
 
   if (isFetching) {
-    return <Loading text="Loading..." />
+    return <Loading text="Cargando..." />
   }
   if (!isAuthorizedUser) {
     return <Redirect route={ROUTES.LOGIN} />
