@@ -1,4 +1,4 @@
-import { Switch, TextField, Typography, Grid, Button } from '@mui/material'
+import { Switch, TextField, Typography, Grid } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import Image from 'next/image'
 import { FACEBOOK_ICON, GITHUB_ICON, GOOGLE_ICON } from 'common/assets'
@@ -7,7 +7,7 @@ import useAuth from 'common/hooks/useAuth'
 import { LoginProps } from 'common/types/login'
 import { useFormik } from 'formik'
 import schema from 'common/schemas/login'
-import { FormikController, InputPassword } from 'common/components'
+import { FormikController, InputPassword, Button } from 'common/components'
 const Login = (): JSX.Element => {
   const theme = useTheme()
   const router = useRouter()
@@ -126,6 +126,7 @@ const Login = (): JSX.Element => {
             <Button
               onClick={() => formik.handleSubmit()}
               sx={{ marginTop: `30px`, color: `white` }}
+              isLoading={loginMutation.isLoading}
             >
               INICIAR SESION
             </Button>

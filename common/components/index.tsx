@@ -6,6 +6,7 @@ import Modal from './Modal'
 import Autocomplete from './Autocomplete'
 import Table from './TableMui'
 import FormikController from './FormikController'
+import Button from './Button'
 export {
   Icon,
   Accordion,
@@ -15,4 +16,5 @@ export {
   Autocomplete,
   Table,
   FormikController,
+  Button,
 }
