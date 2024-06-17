@@ -6,7 +6,7 @@ import { Category } from 'entities'
 
 interface UseLoginProps {
   options?: MutationOptions<Category, CategoriesProps>
-  onSuccessCallback?: () => void
+  onSuccessCallback?: (data?: Category) => void
 }
 
 const useCategory = () => {
@@ -17,8 +17,8 @@ const useCategory = () => {
 
     const mutation = useMutation({
       mutationFn: (props: CategoriesProps) => API.createCategory(props),
-      onSuccess: () => {
-        onSuccessCallback && onSuccessCallback()
+      onSuccess: (data) => {
+        onSuccessCallback && onSuccessCallback(data)
       },
       onError: (error) => {
         enqueueSnackbar(error as string, { variant: `error` })

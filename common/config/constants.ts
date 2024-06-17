@@ -15,6 +15,7 @@ export enum ROUTES {
   LOGIN = `/login`,
   INDEX = `/`,
   CATEGORY = `/category`,
+  GROUPS = `/groups`,
 }
 
 export enum ROLES {

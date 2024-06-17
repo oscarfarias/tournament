@@ -11,6 +11,8 @@ import { CategoriesProps, Option } from 'common/types'
 import useCategory from 'common/hooks/useCategory'
 import schema from 'common/schemas/category'
 import { useFormik } from 'formik'
+import { useRouter } from 'next/router'
+import { ROUTES } from 'common/config/constants'
 
 const groupTypes: Option[] = [
   {
@@ -28,8 +30,12 @@ const groupTypes: Option[] = [
 ]
 
 const Category = () => {
+  const router = useRouter()
   const { useCategoryMutation } = useCategory()
-  const categoryMutation = useCategoryMutation()
+  const categoryMutation = useCategoryMutation({
+    onSuccessCallback: (category) =>
+      router.push(`${ROUTES.CATEGORY}/${category?.year}${ROUTES.GROUPS}`),
+  })
   const formik = useFormik<CategoriesProps>({
     initialValues: {
       year: ``,
