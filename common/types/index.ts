@@ -5,6 +5,7 @@ export * from './login'
 export * from './yup'
 export * from './category'
 export * from './group'
+export * from './team'
 
 export interface Option {
   label: string

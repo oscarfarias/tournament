@@ -8,7 +8,8 @@ import {
   LoginProps,
   SerializedResponse,
 } from 'common/types'
-import { User, Category, Group } from 'entities'
+import { User, Category, Group, Team } from 'entities'
+import { TeamProps } from 'common/types/team'
 
 const requestHandler = (config: AxiosRequestConfig): unknown => {
   if (config.headers) {
@@ -68,6 +69,9 @@ const API = {
   },
   upsertGroup: async (props: GroupProps): Promise<Group> => {
     return axiosInstance.post(`/groups`, props)
+  },
+  upsertTeam: async (props: TeamProps): Promise<Team> => {
+    return axiosInstance.post(`/teams`, props)
   },
 }
 export default API
