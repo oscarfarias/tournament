@@ -6,6 +6,7 @@ import { errorResponse } from 'common/utils/api'
 import { serializeCollection } from 'common/utils'
 import { ExtendedRequest } from 'common/utils/next-connect'
 import { wrap } from '@mikro-orm/core'
+import { isNumber } from 'lodash'
 
 export const getGroupsByYear = async (
   req: ExtendedRequest,
@@ -28,6 +29,11 @@ export const getGroupsByYear = async (
     },
     {
       populate: [`teams`],
+      orderBy: {
+        teams: {
+          name: `ASC`,
+        },
+      },
     },
   )
 
@@ -95,7 +101,7 @@ export const upsertGroup = async (
 
   const nextGroup = {
     ...(name && { name }),
-    teams: nextTeams,
+    ...(isNumber(teams) && { teams: nextTeams }),
   }
 
   const em = getEntityManager()
