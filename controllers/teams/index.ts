@@ -11,15 +11,14 @@ export const upsertTeam = async (
   req: ExtendedRequest,
   res: NextApiResponse,
 ): Promise<void> => {
-  const { id } = req.query
-  const { name, athletes } = req.body
+  const { name, athletes, teamId } = req.body
 
   const teamRepository = getRepository(Team)
   const team = await teamRepository.findOne({
-    id,
+    id: teamId as string,
   })
   if (team == null) {
-    errorResponse(res, `No se encontró el equipo con el id ${id}`)
+    errorResponse(res, `No se encontró el equipo con el id ${teamId}`)
     return
   }
   let nextAthletesQuantity = 0

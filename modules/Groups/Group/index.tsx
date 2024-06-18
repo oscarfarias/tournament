@@ -97,7 +97,7 @@ const GroupView = ({ group }: { group: Group }) => {
         {group.teams?.length > 0 &&
           group.teams?.map((team) => (
             <Accordion key={team.id} title={team.name}>
-              <TeamList key={team.id} />
+              <TeamList key={team.id} team={team} />
             </Accordion>
           ))}
       </Grid>

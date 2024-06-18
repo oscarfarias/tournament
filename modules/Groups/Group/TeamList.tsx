@@ -1,7 +1,10 @@
 import { Grid, Typography } from '@mui/material'
 import { Table, TextField } from 'common/components'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { HeadCell } from 'common/components/TableMui'
+import { Team } from 'entities'
+import { useDebounce } from 'common/hooks'
+import { useTeamMutation } from 'common/queries/useTeamMutation'
 
 interface AthleteProps {
   id: string
@@ -53,9 +56,22 @@ const columns: HeadCell<AthleteProps>[] = [
   },
 ]
 
-const TeamList = () => {
+const TeamList = ({ team }: { team: Team }) => {
   const [athletes, setAthletes] = useState(0)
-  const [teamName, setTeamName] = useState(``)
+  const [teamName, setTeamName] = useState(team.name || ``)
+  const debouncedTeamName = useDebounce(teamName, 500)
+
+  const teamMutation = useTeamMutation()
+
+  useEffect(() => {
+    if (debouncedTeamName?.length > 0 && debouncedTeamName !== team.name) {
+      teamMutation.mutate({
+        name: debouncedTeamName,
+        teamId: team.id,
+      })
+    }
+  }, [debouncedTeamName])
+
   const data = useMemo(() => {
     const data = Array.from({ length: athletes }, (_, i) => {
       return {
