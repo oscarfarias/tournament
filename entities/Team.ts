@@ -24,6 +24,8 @@ export class Team extends CustomBaseEntity {
   name!: string
   @ManyToOne({ entity: () => Group })
   group!: Group
+  @Property({ nullable: true })
+  order: number | null = null
   @OneToMany(() => Athlete, (athlete) => athlete.team)
   athletes = new Collection<Athlete>(this)
 

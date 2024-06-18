@@ -31,7 +31,7 @@ export const getGroupsByYear = async (
       populate: [`teams`],
       orderBy: {
         teams: {
-          name: `ASC`,
+          order: `ASC`,
         },
       },
     },
@@ -96,6 +96,7 @@ export const upsertGroup = async (
     (_, index) => ({
       name: `Equipo ${index + 1}`,
       group: group.id,
+      order: index + 1,
     }),
   )
 

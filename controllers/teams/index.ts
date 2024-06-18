@@ -49,7 +49,7 @@ export const upsertTeam = async (
       populate: [`teams`, `category`],
       orderBy: {
         teams: {
-          name: `ASC`,
+          order: `ASC`,
         },
       },
     },

@@ -329,6 +329,15 @@
           "primary": false,
           "nullable": false,
           "mappedType": "uuid"
+        },
+        "order": {
+          "name": "order",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
         }
       },
       "name": "Teams",
@@ -908,15 +917,14 @@
           "nullable": false,
           "mappedType": "string"
         },
-        "birthDate": {
-          "name": "birthDate",
-          "type": "timestamptz(0)",
+        "shirtNumber": {
+          "name": "shirtNumber",
+          "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 0,
-          "mappedType": "datetime"
+          "mappedType": "string"
         },
         "teamId": {
           "name": "teamId",
