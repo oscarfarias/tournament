@@ -38,6 +38,25 @@ export const upsertCategory = async (
     errorResponse(res, `Ya existe una categoría con el año ${year}`)
     return
   }
+  const nextCategories = await categoryRepository.findAll({
+    orderBy: { year: `ASC` },
+  })
+  if (nextCategories.length > 0) {
+    const firstCategory = nextCategories[0]
+    const lastCategory = nextCategories[nextCategories.length - 1]
+    const lastYear = Number(lastCategory.year)
+    const firstYear = Number(firstCategory.year)
+    if (Number(year) < firstYear) {
+      errorResponse(
+        res,
+        `El año debe ser consecutivo al año ${firstYear}, puede intentar con el año ${
+          lastYear + 1
+        }`,
+      )
+      return
+    }
+  }
+
   const nextGroups = Array.from({ length: groups }).map((_, index) => ({
     name: `Grupo ${index + 1}`,
   }))
