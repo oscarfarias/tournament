@@ -26,7 +26,7 @@ const FieldUpsert = ({
 }) => {
   const athleteMutation = useAthleteMutation()
   const [value, setValue] = useState(athlete[field] || ``)
-  const debouncedValue = useDebounce(value, 500)
+  const debouncedValue = useDebounce(value, 1000)
 
   useEffect(() => {
     if (debouncedValue?.length > 0 && debouncedValue !== athlete[field]) {
