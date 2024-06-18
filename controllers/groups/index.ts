@@ -5,7 +5,7 @@ import { successResponse } from 'common/utils/api'
 import { errorResponse } from 'common/utils/api'
 import { serializeCollection } from 'common/utils'
 import { ExtendedRequest } from 'common/utils/next-connect'
-import { wrap } from '@mikro-orm/core'
+import { PopulateHint, wrap } from '@mikro-orm/core'
 import { isNumber } from 'lodash'
 
 export const getGroupsByYear = async (
@@ -28,7 +28,8 @@ export const getGroupsByYear = async (
       category: category?.id,
     },
     {
-      populate: [`teams`],
+      populate: [`teams`, `teams.athletes`],
+      populateWhere: PopulateHint.INFER,
       orderBy: {
         teams: {
           order: `ASC`,

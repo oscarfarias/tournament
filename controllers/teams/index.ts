@@ -30,10 +30,12 @@ export const upsertTeam = async (
     lastName: null,
     document: null,
     shirtNumber: null,
+    team: team.id,
   }))
+
   const nextTeam = {
     ...(name && { name }),
-    ...(isNumber(athletes) && { teams: nextAthletes }),
+    ...(isNumber(athletes) && { athletes: nextAthletes }),
   }
 
   const em = getEntityManager()

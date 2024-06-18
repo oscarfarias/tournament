@@ -26,7 +26,10 @@ export class Team extends CustomBaseEntity {
   group!: Group
   @Property({ nullable: true })
   order: number | null = null
-  @OneToMany(() => Athlete, (athlete) => athlete.team)
+  @OneToMany(() => Athlete, (athlete) => athlete.team, {
+    orphanRemoval: true,
+    nullable: true,
+  })
   athletes = new Collection<Athlete>(this)
 
   constructor() {

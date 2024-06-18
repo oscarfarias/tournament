@@ -5,22 +5,24 @@ import { HeadCell } from 'common/components/TableMui'
 import { Team } from 'entities'
 import { useDebounce } from 'common/hooks'
 import { useTeamMutation } from 'common/queries/useTeamMutation'
+import { isNumber } from 'lodash'
 
 interface AthleteProps {
+  index: string
   id: string
-  name: string
+  firstName: string
   lastName: string
-  ci: string
+  document: string
   shirtNumber: string
 }
 const columns: HeadCell<AthleteProps>[] = [
   {
     title: `#`,
-    key: `id`,
+    key: `index`,
   },
   {
     title: `Nombre`,
-    key: `name`,
+    key: `firstName`,
     render: () => (
       <Grid container>
         <TextField />
@@ -38,7 +40,7 @@ const columns: HeadCell<AthleteProps>[] = [
   },
   {
     title: `Cedula`,
-    key: `ci`,
+    key: `document`,
     render: () => (
       <Grid container>
         <TextField />
@@ -57,9 +59,10 @@ const columns: HeadCell<AthleteProps>[] = [
 ]
 
 const TeamList = ({ team }: { team: Team }) => {
-  const [athletes, setAthletes] = useState(0)
+  const [athletes, setAthletes] = useState(team?.athletes?.length || 0)
   const [teamName, setTeamName] = useState(team.name || ``)
   const debouncedTeamName = useDebounce(teamName, 500)
+  const debouncedAthletes = useDebounce(athletes, 500)
 
   const teamMutation = useTeamMutation()
 
@@ -72,18 +75,29 @@ const TeamList = ({ team }: { team: Team }) => {
     }
   }, [debouncedTeamName])
 
+  useEffect(() => {
+    const currentAthletes = team?.athletes?.length || 0
+    if (isNumber(debouncedAthletes) && debouncedAthletes !== currentAthletes) {
+      teamMutation.mutate({
+        athletes: debouncedAthletes,
+        teamId: team.id,
+      })
+    }
+  }, [debouncedAthletes])
+
   const data = useMemo(() => {
-    const data = Array.from({ length: athletes }, (_, i) => {
-      return {
-        id: `${i + 1}`,
-        name: ``,
-        lastName: ``,
-        ci: ``,
-        shirtNumber: ``,
-      }
-    })
-    return data
-  }, [athletes])
+    if (team?.athletes == null || team?.athletes?.length === 0) {
+      return []
+    }
+    return team?.athletes?.map((athlete, index) => ({
+      index: `${index + 1}`,
+      id: athlete?.id || ``,
+      firstName: athlete?.firstName || ``,
+      lastName: athlete?.lastName || ``,
+      document: athlete?.document || ``,
+      shirtNumber: athlete?.shirtNumber || ``,
+    }))
+  }, [team?.athletes])
   const onAthleteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     if (value === ``) {
