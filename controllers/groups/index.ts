@@ -33,6 +33,9 @@ export const getGroupsByYear = async (
       orderBy: {
         teams: {
           order: `ASC`,
+          athletes: {
+            order: `ASC`,
+          },
         },
       },
     },

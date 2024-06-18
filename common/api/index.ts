@@ -10,6 +10,7 @@ import {
 } from 'common/types'
 import { User, Category, Group } from 'entities'
 import { TeamProps } from 'common/types/team'
+import { AthleteProps } from 'common/types/athlete'
 
 const requestHandler = (config: AxiosRequestConfig): unknown => {
   if (config.headers) {
@@ -72,6 +73,9 @@ const API = {
   },
   upsertTeam: async (props: TeamProps): Promise<Group> => {
     return axiosInstance.post(`/teams`, props)
+  },
+  upsertAthlete: async (props: AthleteProps): Promise<Group> => {
+    return axiosInstance.post(`/athletes`, props)
   },
 }
 export default API

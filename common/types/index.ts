@@ -6,6 +6,7 @@ export * from './yup'
 export * from './category'
 export * from './group'
 export * from './team'
+export * from './athlete'
 
 export interface Option {
   label: string

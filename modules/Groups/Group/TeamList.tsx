@@ -2,10 +2,11 @@ import { Grid, Typography } from '@mui/material'
 import { Table, TextField } from 'common/components'
 import { useEffect, useMemo, useState } from 'react'
 import { HeadCell } from 'common/components/TableMui'
-import { Team } from 'entities'
+import { Athlete, Team } from 'entities'
 import { useDebounce } from 'common/hooks'
 import { useTeamMutation } from 'common/queries/useTeamMutation'
 import { isNumber } from 'lodash'
+import { useAthleteMutation } from 'common/queries/useAthleteMutation'
 
 interface AthleteProps {
   index: string
@@ -14,6 +15,38 @@ interface AthleteProps {
   lastName: string
   document: string
   shirtNumber: string
+}
+
+const FieldUpsert = ({
+  athlete,
+  field,
+}: {
+  athlete: AthleteProps
+  field: keyof AthleteProps
+}) => {
+  const athleteMutation = useAthleteMutation()
+  const [value, setValue] = useState(athlete[field] || ``)
+  const debouncedValue = useDebounce(value, 500)
+
+  useEffect(() => {
+    if (debouncedValue?.length > 0 && debouncedValue !== athlete[field]) {
+      athleteMutation.mutate({
+        athleteId: athlete.id,
+        [field]: debouncedValue,
+      })
+    }
+  }, [debouncedValue])
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setValue(value)
+  }
+
+  return (
+    <Grid container>
+      <TextField defaultValue={value} onChange={onChange} />
+    </Grid>
+  )
 }
 
 const TeamList = ({ team }: { team: Team }) => {
@@ -51,37 +84,23 @@ const TeamList = ({ team }: { team: Team }) => {
     {
       title: `Nombre`,
       key: `firstName`,
-      render: () => (
-        <Grid container>
-          <TextField />
-        </Grid>
-      ),
+      render: (athlete) => <FieldUpsert athlete={athlete} field="firstName" />,
     },
     {
       title: `Apellido`,
       key: `lastName`,
-      render: () => (
-        <Grid container>
-          <TextField />
-        </Grid>
-      ),
+      render: (athlete) => <FieldUpsert athlete={athlete} field="lastName" />,
     },
     {
       title: `Cedula`,
       key: `document`,
-      render: () => (
-        <Grid container>
-          <TextField />
-        </Grid>
-      ),
+      render: (athlete) => <FieldUpsert athlete={athlete} field="document" />,
     },
     {
       title: `# Camiseta`,
       key: `shirtNumber`,
-      render: () => (
-        <Grid container>
-          <TextField />
-        </Grid>
+      render: (athlete) => (
+        <FieldUpsert athlete={athlete} field="shirtNumber" />
       ),
     },
   ]
@@ -90,14 +109,22 @@ const TeamList = ({ team }: { team: Team }) => {
     if (team?.athletes == null || team?.athletes?.length === 0) {
       return []
     }
-    return team?.athletes?.map((athlete, index) => ({
-      index: `${index + 1}`,
-      id: athlete?.id || ``,
-      firstName: athlete?.firstName || ``,
-      lastName: athlete?.lastName || ``,
-      document: athlete?.document || ``,
-      shirtNumber: athlete?.shirtNumber || ``,
-    }))
+    const nextData: AthleteProps[] = []
+    const athletes = team?.athletes as unknown as Athlete[]
+    athletes?.forEach((athlete, index) => {
+      if (athlete?.id != null) {
+        nextData.push({
+          index: `${index + 1}`,
+          id: `${athlete?.id}`,
+          firstName: athlete?.firstName || ``,
+          lastName: athlete?.lastName || ``,
+          document: athlete?.document || ``,
+          shirtNumber: athlete?.shirtNumber || ``,
+        })
+      }
+    })
+
+    return nextData
   }, [team?.athletes])
   const onAthleteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value

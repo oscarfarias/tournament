@@ -25,13 +25,16 @@ export const upsertTeam = async (
   if (athletes) {
     nextAthletesQuantity = Number(athletes)
   }
-  const nextAthletes = Array.from({ length: nextAthletesQuantity }).map(() => ({
-    firstName: null,
-    lastName: null,
-    document: null,
-    shirtNumber: null,
-    team: team.id,
-  }))
+  const nextAthletes = Array.from({ length: nextAthletesQuantity }).map(
+    (_, index) => ({
+      firstName: null,
+      lastName: null,
+      document: null,
+      shirtNumber: null,
+      team: team.id,
+      order: index + 1,
+    }),
+  )
 
   const nextTeam = {
     ...(name && { name }),
@@ -48,10 +51,13 @@ export const upsertTeam = async (
       id: team.group.id,
     },
     {
-      populate: [`teams`, `category`],
+      populate: [`teams`, `teams.athletes`, `category`],
       orderBy: {
         teams: {
           order: `ASC`,
+          athletes: {
+            order: `ASC`,
+          },
         },
       },
     },

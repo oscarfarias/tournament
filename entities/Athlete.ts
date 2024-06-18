@@ -26,6 +26,8 @@ export class Athlete extends CustomBaseEntity {
   document?: string
   @Property({ nullable: true })
   shirtNumber?: string
+  @Property({ nullable: true })
+  order: number | null = null
   @ManyToOne({ entity: () => Team })
   team!: Team
 
