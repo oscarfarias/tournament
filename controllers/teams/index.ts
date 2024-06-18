@@ -1,4 +1,4 @@
-import { Team } from 'entities'
+import { Group, Team } from 'entities'
 import { getEntityManager, getRepository } from 'common/utils/orm'
 import { NextApiResponse } from 'next'
 import { successResponse } from 'common/utils/api'
@@ -40,5 +40,20 @@ export const upsertTeam = async (
   const teamRef = em.getReference(`Team`, team.id)
   wrap(teamRef).assign(nextTeam)
   await em.persistAndFlush(teamRef)
-  successResponse(res, teamRef)
+  const groupRepository = getRepository(Group)
+  const group = await groupRepository.findOne(
+    {
+      id: team.group.id,
+    },
+    {
+      populate: [`teams`, `category`],
+      orderBy: {
+        teams: {
+          name: `ASC`,
+        },
+      },
+    },
+  )
+
+  successResponse(res, group)
 }
