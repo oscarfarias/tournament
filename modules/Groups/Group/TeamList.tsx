@@ -15,48 +15,6 @@ interface AthleteProps {
   document: string
   shirtNumber: string
 }
-const columns: HeadCell<AthleteProps>[] = [
-  {
-    title: `#`,
-    key: `index`,
-  },
-  {
-    title: `Nombre`,
-    key: `firstName`,
-    render: () => (
-      <Grid container>
-        <TextField />
-      </Grid>
-    ),
-  },
-  {
-    title: `Apellido`,
-    key: `lastName`,
-    render: () => (
-      <Grid container>
-        <TextField />
-      </Grid>
-    ),
-  },
-  {
-    title: `Cedula`,
-    key: `document`,
-    render: () => (
-      <Grid container>
-        <TextField />
-      </Grid>
-    ),
-  },
-  {
-    title: `# Camiseta`,
-    key: `shirtNumber`,
-    render: () => (
-      <Grid container>
-        <TextField />
-      </Grid>
-    ),
-  },
-]
 
 const TeamList = ({ team }: { team: Team }) => {
   const [athletes, setAthletes] = useState(team?.athletes?.length || 0)
@@ -84,6 +42,49 @@ const TeamList = ({ team }: { team: Team }) => {
       })
     }
   }, [debouncedAthletes])
+
+  const columns: HeadCell<AthleteProps>[] = [
+    {
+      title: `#`,
+      key: `index`,
+    },
+    {
+      title: `Nombre`,
+      key: `firstName`,
+      render: () => (
+        <Grid container>
+          <TextField />
+        </Grid>
+      ),
+    },
+    {
+      title: `Apellido`,
+      key: `lastName`,
+      render: () => (
+        <Grid container>
+          <TextField />
+        </Grid>
+      ),
+    },
+    {
+      title: `Cedula`,
+      key: `document`,
+      render: () => (
+        <Grid container>
+          <TextField />
+        </Grid>
+      ),
+    },
+    {
+      title: `# Camiseta`,
+      key: `shirtNumber`,
+      render: () => (
+        <Grid container>
+          <TextField />
+        </Grid>
+      ),
+    },
+  ]
 
   const data = useMemo(() => {
     if (team?.athletes == null || team?.athletes?.length === 0) {
