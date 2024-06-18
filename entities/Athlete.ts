@@ -18,14 +18,16 @@ import { Team } from './index'
 export class Athlete extends CustomBaseEntity {
   @PrimaryKey({ type: `uuid`, defaultRaw: `uuid_generate_v4()` })
   id: string = uuid4()
-  @Property()
-  firstName!: string
+  @Property({ nullable: true })
+  firstName?: string
   @Property({ nullable: true })
   lastName?: string
-  @Property()
-  document!: string
-  @Property()
-  birthDate!: Date
+  @Property({ nullable: true })
+  document?: string
+  @Property({ nullable: true })
+  shirtNumber?: string
+  @Property({ nullable: true })
+  order: number | null = null
   @ManyToOne({ entity: () => Team })
   team!: Team
 

@@ -29,3 +29,8 @@ export type MutationResult<
   TData = unknown,
   TVariables = unknown,
 > = UseMutationResult<TData, unknown, TVariables, unknown>
+
+export interface UseQueryProps<T, K> {
+  options?: MutationOptions<T, K>
+  onSuccessCallback?: (data?: T) => void
+}

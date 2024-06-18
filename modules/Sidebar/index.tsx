@@ -10,8 +10,10 @@ import ListItemText from '@mui/material/ListItemText'
 import { drawerWidth } from 'common/config/constants'
 import { menu } from './menu'
 import { Icon } from 'common/components'
+import { useRouter } from 'next/router'
 
 const Sidebar = (): JSX.Element => {
+  const router = useRouter()
   return (
     <Drawer
       sx={{
@@ -28,9 +30,9 @@ const Sidebar = (): JSX.Element => {
       <Toolbar />
       <Divider />
       <List>
-        {menu.map(({ text, icon }, index) => (
+        {menu.map(({ text, icon, path }, index) => (
           <ListItem key={index} disablePadding>
-            <ListItemButton>
+            <ListItemButton onClick={() => router.push(path)}>
               <ListItemIcon>
                 <Icon icon={icon} />
               </ListItemIcon>
