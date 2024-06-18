@@ -4,15 +4,14 @@ import {
   Property,
   Unique,
   ManyToOne,
-  OneToMany,
   Collection,
+  OneToMany,
 } from '@mikro-orm/core'
 import { CustomBaseEntity } from './BaseEntity'
 import { SoftDeletable } from 'mikro-orm-soft-delete'
 import uuid4 from 'uuid4'
 import { Category, Team } from './index'
 
-//CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
 @SoftDeletable(() => Group, `deletedAt`, () => new Date())
 @Entity()
 @Unique({ properties: [`deletedAt`, `name`] })
@@ -23,8 +22,11 @@ export class Group extends CustomBaseEntity {
   name!: string
   @ManyToOne({ entity: () => Category })
   category!: Category
-  @OneToMany(() => Team, (team) => team.group)
-  groups = new Collection<Team>(this)
+  @OneToMany(() => Team, (team) => team.group, {
+    orphanRemoval: true,
+    nullable: true,
+  })
+  teams = new Collection<Team>(this)
 
   constructor() {
     super()

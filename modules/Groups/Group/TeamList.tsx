@@ -95,7 +95,7 @@ const TeamList = () => {
           <TextField onChange={onAthleteChange} value={athletes} />
         </Grid>
       </Grid>
-      <Grid container sx={{ width: `100%` }}>
+      <Grid container mt={3} sx={{ width: `100%` }}>
         <Table columns={columns} rows={data} />
       </Grid>
     </Grid>

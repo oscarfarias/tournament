@@ -22,9 +22,14 @@ export const getGroupsByYear = async (
     return
   }
   const groupRepository = getRepository(Group)
-  const groups = await groupRepository.find({
-    category: category?.id,
-  })
+  const groups = await groupRepository.find(
+    {
+      category: category?.id,
+    },
+    {
+      populate: [`teams`],
+    },
+  )
 
   const [groupsIds, groupsById] = serializeCollection({
     entity: groups,
@@ -55,12 +60,17 @@ export const upsertGroup = async (
   req: ExtendedRequest,
   res: NextApiResponse,
 ): Promise<void> => {
-  const { name, groupId } = req.body
+  const { name, groupId, teams } = req.body
 
   const groupRepository = getRepository(Group)
-  const group = await groupRepository.findOne({
-    id: groupId,
-  })
+  const group = await groupRepository.findOne(
+    {
+      id: groupId,
+    },
+    {
+      populate: [`teams`],
+    },
+  )
 
   if (group == null) {
     errorResponse(res, `Grupo no encontrado`)
@@ -70,8 +80,22 @@ export const upsertGroup = async (
     errorResponse(res, `Ya existe un grupo con el nombre ${name}`)
     return
   }
+  let nextTeamsQuantity = 0
+
+  if (teams) {
+    nextTeamsQuantity = Number(teams)
+  }
+
+  const nextTeams = Array.from({ length: nextTeamsQuantity }).map(
+    (_, index) => ({
+      name: `Equipo ${index + 1}`,
+      group: group.id,
+    }),
+  )
+
   const nextGroup = {
-    name,
+    ...(name && { name }),
+    teams: nextTeams,
   }
 
   const em = getEntityManager()

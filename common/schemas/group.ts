@@ -5,6 +5,7 @@ import Yup from 'common/utils/yup'
 
 const schema = Yup.object().shape<SchemaOf<GroupProps>>({
   groupId: Yup.string().required(`Id grupo requerido`),
-  name: Yup.string().required(`Nombre requerido`),
+  name: Yup.string().optional(),
+  teams: Yup.number().optional(),
 })
 export default schema

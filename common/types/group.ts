@@ -1,4 +1,5 @@
 export interface GroupProps {
-  name: string
+  name?: string
   groupId: string
+  teams?: number
 }

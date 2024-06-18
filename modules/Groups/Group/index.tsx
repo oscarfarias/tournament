@@ -8,7 +8,8 @@ import { useGroupMutation } from 'common/queries/useGroupMutation'
 import useGroupStore from 'common/hooks/useGroups/store'
 
 const GroupView = ({ group }: { group: Group }) => {
-  const [teams, setTeams] = useState(0)
+  const [teams, setTeams] = useState(group.teams?.length || 0)
+
   const [groupName, setGroupName] = useState(group.name)
 
   const { groupsById, setGroupsById, setGroup } = useGroupStore(
@@ -35,14 +36,26 @@ const GroupView = ({ group }: { group: Group }) => {
     onSuccessCallback: (updatedGroup) => updateGroup(updatedGroup),
   })
   const debouncedGroupName = useDebounce(groupName, 500)
+  const debouncedTeams = useDebounce(teams, 500)
 
   useEffect(() => {
     if (debouncedGroupName?.length > 0 && debouncedGroupName !== group.name) {
-      groupMutation.mutate({ name: debouncedGroupName, groupId: group.id })
+      groupMutation.mutate({
+        name: debouncedGroupName,
+        groupId: group.id,
+      })
     }
   }, [debouncedGroupName])
 
-  const teamArray = Array.from({ length: teams }, (_, i) => i + 1)
+  useEffect(() => {
+    if (debouncedTeams !== group.teams?.length) {
+      groupMutation.mutate({
+        groupId: group.id,
+        teams: Number(debouncedTeams),
+      })
+    }
+  }, [debouncedTeams])
+
   const onTeamChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     if (value === ``) {
@@ -81,10 +94,10 @@ const GroupView = ({ group }: { group: Group }) => {
       </Grid>
 
       <Grid container mt={2} flexDirection="column" ml={1} gap={1}>
-        {teamArray.length > 0 &&
-          teamArray.map((team) => (
-            <Accordion key={team} title={`Equipo ${team}`}>
-              <TeamList key={team} />
+        {group.teams?.length > 0 &&
+          group.teams?.map((team) => (
+            <Accordion key={team.id} title={team.name}>
+              <TeamList key={team.id} />
             </Accordion>
           ))}
       </Grid>
