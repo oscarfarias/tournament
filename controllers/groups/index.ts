@@ -31,6 +31,7 @@ export const getGroupsByYear = async (
       populate: [`teams`, `teams.athletes`],
       populateWhere: PopulateHint.INFER,
       orderBy: {
+        order: `ASC`,
         teams: {
           order: `ASC`,
           athletes: {
@@ -78,7 +79,7 @@ export const upsertGroup = async (
       id: groupId,
     },
     {
-      populate: [`teams`],
+      populate: [`teams`, `category`],
     },
   )
 
@@ -113,6 +114,7 @@ export const upsertGroup = async (
   const groupRef = em.getReference(`Group`, group.id)
   wrap(groupRef).assign(nextGroup)
   await em.persistAndFlush(groupRef)
+
   successResponse(res, groupRef)
 }
 
@@ -141,9 +143,22 @@ export const createGroup = async (
   }
 
   const groupRepository = getRepository(Group)
+  const lastGroup = await groupRepository.findOne(
+    {
+      category: category.id,
+    },
+    {
+      orderBy: {
+        order: `DESC`,
+      },
+    },
+  )
+  const order = lastGroup?.order || 0
+
   const group = groupRepository.create({
     name,
     category: category.id,
+    order: Number(order) + 1,
   })
   const em = getEntityManager()
   await em.persistAndFlush(group)

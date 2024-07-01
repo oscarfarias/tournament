@@ -21,8 +21,9 @@ const Groups = () => {
   const { setGroup, groupsById, groupsIds } = useGroups(year)
   const [groupId, setGroupId] = useState(`0`)
   const [selectedGroup, setSelectedGroup] = useState<GroupEntity | null>(null)
-  const createGroup = useCreateGroupMutation()
+
   const deleteGroup = useDeleteGroupMutation()
+  const createGroup = useCreateGroupMutation()
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     if (newValue !== ADD_TAB) {
@@ -48,7 +49,7 @@ const Groups = () => {
   }
 
   const onCreateGroup = () => {
-    createGroup.mutate({
+    createGroup.mutateAsync({
       name: `Nuevo grupo`,
       year: year as string,
     })

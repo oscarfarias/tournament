@@ -32,5 +32,6 @@ export const useGroups = (year?: string) => {
     setGroup,
     groupsById,
     groupsIds,
+    setGroupsById,
   }
 }
