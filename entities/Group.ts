@@ -20,6 +20,8 @@ export class Group extends CustomBaseEntity {
   id: string = uuid4()
   @Property()
   name!: string
+  @Property({ nullable: true })
+  order: number | null = null
   @ManyToOne({ entity: () => Category })
   category!: Category
   @OneToMany(() => Team, (team) => team.group, {

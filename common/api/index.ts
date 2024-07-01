@@ -6,6 +6,7 @@ import {
   CategoriesProps,
   GroupProps,
   LoginProps,
+  NewGroupProps,
   SerializedResponse,
 } from 'common/types'
 import { User, Category, Group } from 'entities'
@@ -67,6 +68,12 @@ const API = {
     year?: string,
   ): Promise<SerializedResponse<Group, { groups: string }>> => {
     return axiosInstance.get(`/groups/category/${year}`)
+  },
+  createGroup: async (props: NewGroupProps): Promise<Group> => {
+    return axiosInstance.post(`/groups/new`, props)
+  },
+  deleteGroup: async (id: string): Promise<Group> => {
+    return axiosInstance.delete(`/groups/${id}`)
   },
   upsertGroup: async (props: GroupProps): Promise<Group> => {
     return axiosInstance.post(`/groups`, props)

@@ -115,3 +115,61 @@ export const upsertGroup = async (
   await em.persistAndFlush(groupRef)
   successResponse(res, groupRef)
 }
+
+export const createGroup = async (
+  req: ExtendedRequest,
+  res: NextApiResponse,
+): Promise<void> => {
+  const { name, year } = req.body
+
+  const categoryRepository = getRepository(Category)
+  const category = await categoryRepository.findOne(
+    {
+      year,
+    },
+    {
+      populate: [`groups`],
+    },
+  )
+  if (!category) {
+    errorResponse(res, `No se encontró la categoría con el año ${year}`)
+    return
+  }
+  if (category.groups.length >= 3) {
+    errorResponse(res, `No se pueden crear más de 3 grupos por categoría`)
+    return
+  }
+
+  const groupRepository = getRepository(Group)
+  const group = groupRepository.create({
+    name,
+    category: category.id,
+  })
+  const em = getEntityManager()
+  await em.persistAndFlush(group)
+  await em.populate(group, [`teams`, `teams.athletes`, `category`])
+  successResponse(res, group)
+}
+
+export const deleteGroup = async (
+  req: ExtendedRequest,
+  res: NextApiResponse,
+): Promise<void> => {
+  const { id } = req.query
+  const groupRepository = getRepository(Group)
+  const group = await groupRepository.findOne(
+    {
+      id,
+    },
+    {
+      populate: [`teams`, `teams.athletes`, `category`],
+    },
+  )
+  if (!group) {
+    errorResponse(res, `No se encontró el grupo con el id ${id}`)
+    return
+  }
+  const em = getEntityManager()
+  await em.removeAndFlush(group)
+  successResponse(res, group)
+}
