@@ -5,3 +5,8 @@ export interface AthleteProps {
   document?: string
   shirtNumber?: string
 }
+
+export interface AddMoreAthletesProps {
+  athletesToAdd: number
+  teamId: string
+}

@@ -10,7 +10,7 @@ import {
 } from 'common/types'
 import { User, Category, Group } from 'entities'
 import { TeamProps } from 'common/types/team'
-import { AthleteProps } from 'common/types/athlete'
+import { AddMoreAthletesProps, AthleteProps } from 'common/types/athlete'
 
 const requestHandler = (config: AxiosRequestConfig): unknown => {
   if (config.headers) {
@@ -79,6 +79,9 @@ const API = {
   },
   deleteAthlete: async (id: string): Promise<Group> => {
     return axiosInstance.delete(`/athletes/${id}`)
+  },
+  addMoreAthletes: async (props: AddMoreAthletesProps): Promise<Group> => {
+    return axiosInstance.post(`/athletes/addMore`, props)
   },
 }
 export default API

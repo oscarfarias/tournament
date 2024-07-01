@@ -7,6 +7,7 @@ import { useDebounce } from 'common/hooks'
 import { useTeamMutation } from 'common/queries/useTeamMutation'
 import { isNumber } from 'lodash'
 import {
+  useAddMoreAthletesMutation,
   useAthleteDeleteMutation,
   useAthleteMutation,
 } from 'common/queries/useAthleteMutation'
@@ -57,11 +58,13 @@ const TeamList = ({ team }: { team: Team }) => {
   const [athletes, setAthletes] = useState(0)
   const [teamName, setTeamName] = useState(team.name || ``)
   const [athlete, setAthlete] = useState<AthleteProps | null>(null)
+  const [athletesToAdd, setAthletesToAdd] = useState(0)
   const debouncedTeamName = useDebounce(teamName, 500)
   const debouncedAthletes = useDebounce(athletes, 500)
-
+  const debouncedAthletesToAdd = useDebounce(athletesToAdd, 500)
   const teamMutation = useTeamMutation()
   const deleteAthlete = useAthleteDeleteMutation()
+  const addMoreAthletes = useAddMoreAthletesMutation()
 
   useEffect(() => {
     if (debouncedTeamName?.length > 0 && debouncedTeamName !== team.name) {
@@ -84,6 +87,24 @@ const TeamList = ({ team }: { team: Team }) => {
         })
     }
   }, [debouncedAthletes])
+
+  useEffect(() => {
+    if (isNumber(debouncedAthletesToAdd) && debouncedAthletesToAdd > 0) {
+      // ADD MORE ATHLETES
+      addMoreAthletes
+        .mutateAsync({
+          athletesToAdd: debouncedAthletesToAdd,
+          teamId: team.id,
+        })
+        .then(() => {
+          setAthletesToAdd(0)
+        })
+    }
+  }, [debouncedAthletesToAdd])
+
+  const increaseAthletes = () => {
+    setAthletesToAdd(athletesToAdd + 1)
+  }
 
   const onDeleteAthlete = (athlete: AthleteProps) => {
     const { firstName, lastName, document, shirtNumber } = athlete
@@ -207,7 +228,14 @@ const TeamList = ({ team }: { team: Team }) => {
         <Typography mt={1}>Cantidad de atletas:</Typography>
         <Grid item xs={5}>
           {team?.athletes?.length > 0 ? (
-            <Typography mt="8px">{team.athletes.length}</Typography>
+            <Grid container flexDirection="row" gap={1}>
+              <Typography mt="8px">
+                {team.athletes.length + athletesToAdd}
+              </Typography>
+              <IconButton onClick={increaseAthletes}>
+                <Icon icon="add" />
+              </IconButton>
+            </Grid>
           ) : (
             <TextField
               onChange={onAthleteChange}
