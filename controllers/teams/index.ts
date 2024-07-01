@@ -109,23 +109,51 @@ export const addMoreTeams = async (
 ): Promise<void> => {
   const { teamsToAdd, groupId } = req.body
   const groupRepository = getRepository(Group)
-  const group = await groupRepository.findOne({
-    id: groupId as string,
-  })
+  const teamRepository = getRepository(Team)
+  const group = await groupRepository.findOne(
+    {
+      id: groupId as string,
+    },
+    {
+      populate: [`teams`, `teams.athletes`, `teams.group`, `category`],
+      orderBy: {
+        teams: {
+          order: `ASC`,
+          athletes: {
+            order: `ASC`,
+          },
+        },
+      },
+    },
+  )
   if (group == null) {
     errorResponse(res, `No se encontró el grupo con el id ${groupId}`)
     return
   }
-  const nextTeamsQuantity = Number(teamsToAdd)
-  const nextTeams = Array.from({ length: nextTeamsQuantity }).map(
-    (_, index) => ({
-      name: null,
-      order: group.teams.length + index + 1,
+  const lastTeam = await teamRepository.findOne(
+    {
       group: group.id,
-    }),
+    },
+    {
+      orderBy: {
+        order: `DESC`,
+      },
+    },
   )
 
+  const nextTeamsQuantity = Number(teamsToAdd)
+
   const em = getEntityManager()
+  const teamOrder = lastTeam?.order ?? 1
+  const nextTeams = Array.from({ length: nextTeamsQuantity }, (_, index) => {
+    const order = Number(teamOrder) + Number(index) + 1
+    const team = em.create(`Team`, {
+      name: `Equipo ${order}`,
+      order,
+      group: group.id,
+    })
+    return team
+  })
   await em.persistAndFlush(nextTeams)
   const nextGroup = await groupRepository.findOne(
     {
