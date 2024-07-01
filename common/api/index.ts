@@ -77,5 +77,8 @@ const API = {
   upsertAthlete: async (props: AthleteProps): Promise<Group> => {
     return axiosInstance.post(`/athletes`, props)
   },
+  deleteAthlete: async (id: string): Promise<Group> => {
+    return axiosInstance.delete(`/athletes/${id}`)
+  },
 }
 export default API

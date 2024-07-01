@@ -49,3 +49,41 @@ export const useAthleteMutation = (
 
   return mutation
 }
+export const useAthleteDeleteMutation = (
+  props?: UseQueryProps<Group, string>,
+): MutationResult<Group, string> => {
+  const queryClient = useQueryClient()
+  const { options, onSuccessCallback } = props || {}
+
+  const mutation = useMutation({
+    mutationFn: (athleteId: string) => API.deleteAthlete(athleteId),
+    onSuccess: (group) => {
+      onSuccessCallback && onSuccessCallback(group)
+
+      queryClient.setQueryData<
+        SerializedResponse<Group, { groups: string }> | null | undefined
+      >(QUERY_KEYS.groups(group.category.year), (oldGroup) => {
+        if (oldGroup == null) {
+          return oldGroup
+        }
+        const { groupsById } = oldGroup
+        const nextGroupsById = {
+          ...groupsById,
+          [group.id]: group,
+        }
+        return {
+          ...oldGroup,
+          groupsById: nextGroupsById,
+        }
+      })
+
+      enqueueSnackbar(`Eliminado exitosamente`, { variant: `success` })
+    },
+    onError: (error) => {
+      enqueueSnackbar(error as string, { variant: `error` })
+    },
+    ...options,
+  })
+
+  return mutation
+}
