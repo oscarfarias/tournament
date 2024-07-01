@@ -61,13 +61,27 @@ const TournamentHandler = () => {
     if (categories.length === 0) {
       return []
     }
-    return categories.map((category) => ({
-      id: category.id,
-      name: category.year,
-      groups: `${category?.groups?.length}`,
-      teams: `0`,
-      athletes: `0`,
-    }))
+
+    return categories.map((category) => {
+      return {
+        id: category.id,
+        name: category.year,
+        groups: `${category?.groups?.length}`,
+        teams: `${category.groups?.reduce(
+          (acc, group) => acc + group.teams?.length || 0,
+          0,
+        )}`,
+        athletes: `${category.groups?.reduce(
+          (acc, group) =>
+            acc +
+              group.teams?.reduce(
+                (acc, team) => acc + team.athletes?.length || 0,
+                0,
+              ) || 0,
+          0,
+        )}`,
+      }
+    })
   }, [categories])
 
   return (

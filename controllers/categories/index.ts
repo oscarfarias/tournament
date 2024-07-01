@@ -10,8 +10,8 @@ export const getCategories: NextApiHandler = async (req, res) => {
   const categoryRepositoy = getRepository(Category)
   try {
     const categories = await categoryRepositoy.findAll({
-      orderBy: { year: `DESC` },
-      populate: [`groups`],
+      orderBy: { year: `DESC`, groups: { order: `ASC` } },
+      populate: [`groups`, `groups.teams`, `groups.teams.athletes`],
     })
     const [categoriesIds, categoriesById] = serializeCollection({
       entity: categories,
@@ -59,6 +59,7 @@ export const upsertCategory = async (
 
   const nextGroups = Array.from({ length: groups }).map((_, index) => ({
     name: `Grupo ${index + 1}`,
+    order: index + 1,
   }))
 
   const newCategory = await categoryRepository.create({

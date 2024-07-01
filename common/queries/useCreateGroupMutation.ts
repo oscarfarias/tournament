@@ -1,7 +1,7 @@
 import {
-  GroupProps,
   UseQueryProps,
   MutationResult,
+  NewGroupProps,
   SerializedResponse,
 } from 'common/types'
 import { Group } from 'entities'
@@ -11,38 +11,32 @@ import { useMutation, useQueryClient } from 'react-query'
 import { enqueueSnackbar } from 'notistack'
 import { QUERY_KEYS } from './keys'
 
-export const useGroupMutation = (
-  props?: UseQueryProps<Group, GroupProps>,
-): MutationResult<Group, GroupProps> => {
+export const useCreateGroupMutation = (
+  props?: UseQueryProps<Group, NewGroupProps>,
+): MutationResult<Group, NewGroupProps> => {
   const { options, onSuccessCallback } = props || {}
   const queryClient = useQueryClient()
 
   const mutation = useMutation({
-    mutationFn: (props: GroupProps) => API.upsertGroup(props),
-    onSuccess: (group) => {
-      onSuccessCallback && onSuccessCallback(group)
-
+    mutationFn: (props: NewGroupProps) => API.createGroup(props),
+    onSuccess: (data) => {
+      onSuccessCallback && onSuccessCallback(data)
       queryClient.setQueryData<
         SerializedResponse<Group, { groups: string }> | null | undefined
-      >(QUERY_KEYS.groups(group.category.year), (oldGroup) => {
-        if (oldGroup == null) {
-          return oldGroup
+      >(QUERY_KEYS.groups(data.category.year), (oldData) => {
+        if (oldData == null) {
+          return oldData
         }
-        const { groupsById } = oldGroup
+        const { groupsById, groupsIds } = oldData
         const nextGroupsById = {
           ...groupsById,
-          [group.id]: group,
+          [data.id]: data,
         }
-
-        return {
-          ...oldGroup,
-          groupsById: nextGroupsById,
-        }
+        const nextGroupsIds = [...groupsIds, data.id]
+        return { groupsIds: nextGroupsIds, groupsById: nextGroupsById }
       })
-
-      enqueueSnackbar(`Actualizado`, { variant: `success` })
+      enqueueSnackbar(`Nuevo grupo agregado`, { variant: `success` })
     },
-
     onError: (error) => {
       enqueueSnackbar(error as string, { variant: `error` })
     },

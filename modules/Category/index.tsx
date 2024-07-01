@@ -7,29 +7,14 @@ import {
   Autocomplete,
   FormikController,
 } from 'common/components'
-import { CategoriesProps, Option } from 'common/types'
+import { CategoriesProps } from 'common/types'
 import useCategory from 'common/hooks/useCategory'
 import schema from 'common/schemas/category'
 import { useFormik } from 'formik'
 import { useRouter } from 'next/router'
-import { ROUTES } from 'common/config/constants'
+import { ROUTES, groupTypes } from 'common/config/constants'
 import useCategoryStore from 'common/stores/useCategoryStore'
 import { isNumber } from 'lodash'
-
-const groupTypes: Option[] = [
-  {
-    label: `Grupo único`,
-    value: 1,
-  },
-  {
-    label: `Grupo 2`,
-    value: 2,
-  },
-  {
-    label: `Grupo 3`,
-    value: 3,
-  },
-]
 
 const Category = () => {
   const router = useRouter()

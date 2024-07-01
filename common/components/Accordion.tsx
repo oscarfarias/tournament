@@ -8,7 +8,13 @@ import AccordionDetails, {
 import Icon, { icons } from './Icon'
 import type { AccordionProps } from '@mui/material/Accordion'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { ListItemIcon, ListItemText, Stack, Typography } from '@mui/material'
+import {
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Stack,
+  Typography,
+} from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
 interface ExtendedAccordionProps
@@ -60,19 +66,15 @@ export default function AccordionWrapper({
     </ListItemIcon>
   ) : null
 
+  const handleEndIconClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    endIconOnClick && endIconOnClick()
+  }
+
   const endIconComponent = endIcon ? (
-    <Icon
-      icon={endIcon}
-      sx={{ color: endIconColor, marginLeft: 2 }}
-      onClick={
-        endIconOnClick
-          ? (e) => {
-              e.stopPropagation()
-              endIconOnClick?.()
-            }
-          : undefined
-      }
-    />
+    <IconButton onClick={handleEndIconClick}>
+      <Icon icon={endIcon} sx={{ color: endIconColor }} />
+    </IconButton>
   ) : null
 
   return (
@@ -86,7 +88,7 @@ export default function AccordionWrapper({
       {...props}
     >
       <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
+        expandIcon={<ExpandMoreIcon sx={{ color: `common.white` }} />}
         aria-controls="content"
         id="panel"
         {...AccordionSummaryProps}

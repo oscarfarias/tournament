@@ -1,10 +1,8 @@
 import 'reflect-metadata'
 import { withORM } from 'common/utils/orm'
 import getHandler from 'common/utils/next-connect'
-import { getGroupById, deleteGroup } from 'controllers/groups'
 
+import { addMoreAthletes } from 'controllers/athletes'
 const handler = getHandler()
-handler.get(getGroupById)
-handler.delete(deleteGroup)
-
+handler.post(addMoreAthletes)
 export default withORM(handler)

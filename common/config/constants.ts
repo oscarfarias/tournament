@@ -1,4 +1,5 @@
 import { blue, green } from '@mui/material/colors'
+import { Option } from 'common/types'
 export const TOKEN_KEY = `userToken`
 export const USER_KEY = `user`
 export const laneColors: Record<string, string> = {
@@ -22,3 +23,18 @@ export enum ROLES {
   ADMIN = `Admin`,
   SUPERVISOR = `Supervisor`,
 }
+
+export const groupTypes: Option[] = [
+  {
+    label: `Grupo único`,
+    value: 1,
+  },
+  {
+    label: `Grupo 2`,
+    value: 2,
+  },
+  {
+    label: `Grupo 3`,
+    value: 3,
+  },
+]

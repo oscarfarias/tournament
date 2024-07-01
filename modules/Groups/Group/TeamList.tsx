@@ -1,12 +1,16 @@
-import { Grid, Typography } from '@mui/material'
-import { Table, TextField } from 'common/components'
+import { Grid, Typography, IconButton } from '@mui/material'
+import { Table, TextField, Icon, Modal } from 'common/components'
 import { useEffect, useMemo, useState } from 'react'
 import { HeadCell } from 'common/components/TableMui'
 import { Athlete, Team } from 'entities'
 import { useDebounce } from 'common/hooks'
 import { useTeamMutation } from 'common/queries/useTeamMutation'
 import { isNumber } from 'lodash'
-import { useAthleteMutation } from 'common/queries/useAthleteMutation'
+import {
+  useAddMoreAthletesMutation,
+  useAthleteDeleteMutation,
+  useAthleteMutation,
+} from 'common/queries/useAthleteMutation'
 
 interface AthleteProps {
   index: string
@@ -15,6 +19,7 @@ interface AthleteProps {
   lastName: string
   document: string
   shirtNumber: string
+  actions?: string
 }
 
 const FieldUpsert = ({
@@ -29,7 +34,7 @@ const FieldUpsert = ({
   const debouncedValue = useDebounce(value, 1000)
 
   useEffect(() => {
-    if (debouncedValue?.length > 0 && debouncedValue !== athlete[field]) {
+    if (debouncedValue !== athlete[field]) {
       athleteMutation.mutate({
         athleteId: athlete.id,
         [field]: debouncedValue,
@@ -50,12 +55,16 @@ const FieldUpsert = ({
 }
 
 const TeamList = ({ team }: { team: Team }) => {
-  const [athletes, setAthletes] = useState(team?.athletes?.length || 0)
+  const [athletes, setAthletes] = useState(0)
   const [teamName, setTeamName] = useState(team.name || ``)
+  const [athlete, setAthlete] = useState<AthleteProps | null>(null)
+  const [athletesToAdd, setAthletesToAdd] = useState(0)
   const debouncedTeamName = useDebounce(teamName, 500)
   const debouncedAthletes = useDebounce(athletes, 500)
-
+  const debouncedAthletesToAdd = useDebounce(athletesToAdd, 500)
   const teamMutation = useTeamMutation()
+  const deleteAthlete = useAthleteDeleteMutation()
+  const addMoreAthletes = useAddMoreAthletesMutation()
 
   useEffect(() => {
     if (debouncedTeamName?.length > 0 && debouncedTeamName !== team.name) {
@@ -67,14 +76,55 @@ const TeamList = ({ team }: { team: Team }) => {
   }, [debouncedTeamName])
 
   useEffect(() => {
-    const currentAthletes = team?.athletes?.length || 0
-    if (isNumber(debouncedAthletes) && debouncedAthletes !== currentAthletes) {
-      teamMutation.mutate({
-        athletes: debouncedAthletes,
-        teamId: team.id,
-      })
+    if (isNumber(debouncedAthletes) && debouncedAthletes > 0) {
+      teamMutation
+        .mutateAsync({
+          athletes: debouncedAthletes,
+          teamId: team.id,
+        })
+        .then(() => {
+          setAthletes(0)
+        })
     }
   }, [debouncedAthletes])
+
+  useEffect(() => {
+    if (isNumber(debouncedAthletesToAdd) && debouncedAthletesToAdd > 0) {
+      addMoreAthletes
+        .mutateAsync({
+          athletesToAdd: debouncedAthletesToAdd,
+          teamId: team.id,
+        })
+        .then(() => {
+          setAthletesToAdd(0)
+        })
+    }
+  }, [debouncedAthletesToAdd])
+
+  const increaseAthletes = () => {
+    setAthletesToAdd(athletesToAdd + 1)
+  }
+
+  const onDeleteAthlete = (athlete: AthleteProps) => {
+    const { firstName, lastName, document, shirtNumber } = athlete
+    if (
+      firstName === `` &&
+      lastName === `` &&
+      document === `` &&
+      shirtNumber === ``
+    ) {
+      deleteAthlete.mutate(athlete.id)
+      return
+    }
+    setAthlete(athlete)
+  }
+  const onConfirmDeleteAthlete = () => {
+    if (athlete == null) {
+      return
+    }
+    deleteAthlete.mutate(athlete.id)
+    setAthlete(null)
+  }
 
   const columns: HeadCell<AthleteProps>[] = [
     {
@@ -101,6 +151,19 @@ const TeamList = ({ team }: { team: Team }) => {
       key: `shirtNumber`,
       render: (athlete) => (
         <FieldUpsert athlete={athlete} field="shirtNumber" />
+      ),
+    },
+    {
+      title: `Acciones`,
+      key: `actions`,
+      render: (athlete) => (
+        <Grid container>
+          <Grid item>
+            <IconButton onClick={() => onDeleteAthlete(athlete)}>
+              <Icon icon="delete" />
+            </IconButton>
+          </Grid>
+        </Grid>
       ),
     },
   ]
@@ -141,6 +204,19 @@ const TeamList = ({ team }: { team: Team }) => {
 
   return (
     <Grid container>
+      {athlete ? (
+        <Modal
+          isOpen
+          confirm
+          title="Elimninar atleta"
+          onConfirm={onConfirmDeleteAthlete}
+          onCancel={() => setAthlete(null)}
+        >
+          <Typography>
+            ¿Estás seguro que deseas eliminar este atleta?
+          </Typography>
+        </Modal>
+      ) : null}
       <Grid container flexDirection="row" gap={2}>
         <Typography mt={1}>Nombre del equipo:</Typography>
         <Grid item xs={5}>
@@ -150,7 +226,22 @@ const TeamList = ({ team }: { team: Team }) => {
       <Grid container mt={1} flexDirection="row" gap={2}>
         <Typography mt={1}>Cantidad de atletas:</Typography>
         <Grid item xs={5}>
-          <TextField onChange={onAthleteChange} value={athletes} />
+          {team?.athletes?.length > 0 ? (
+            <Grid container flexDirection="row" gap={1}>
+              <Typography mt="8px">
+                {team.athletes.length + athletesToAdd}
+              </Typography>
+              <IconButton onClick={increaseAthletes}>
+                <Icon icon="add" />
+              </IconButton>
+            </Grid>
+          ) : (
+            <TextField
+              onChange={onAthleteChange}
+              defaultValue={0}
+              value={athletes}
+            />
+          )}
         </Grid>
       </Grid>
       <Grid container mt={3} sx={{ width: `100%` }}>

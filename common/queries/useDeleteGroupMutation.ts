@@ -1,48 +1,38 @@
-import {
-  GroupProps,
-  UseQueryProps,
-  MutationResult,
-  SerializedResponse,
-} from 'common/types'
+import { UseQueryProps, MutationResult, SerializedResponse } from 'common/types'
 import { Group } from 'entities'
 import API from 'common/api'
 
 import { useMutation, useQueryClient } from 'react-query'
 import { enqueueSnackbar } from 'notistack'
 import { QUERY_KEYS } from './keys'
-
-export const useGroupMutation = (
-  props?: UseQueryProps<Group, GroupProps>,
-): MutationResult<Group, GroupProps> => {
-  const { options, onSuccessCallback } = props || {}
+export const useDeleteGroupMutation = (
+  props?: UseQueryProps<Group, string>,
+): MutationResult<Group, string> => {
   const queryClient = useQueryClient()
+  const { options, onSuccessCallback } = props || {}
 
   const mutation = useMutation({
-    mutationFn: (props: GroupProps) => API.upsertGroup(props),
+    mutationFn: (groupId: string) => API.deleteGroup(groupId),
     onSuccess: (group) => {
       onSuccessCallback && onSuccessCallback(group)
-
       queryClient.setQueryData<
         SerializedResponse<Group, { groups: string }> | null | undefined
       >(QUERY_KEYS.groups(group.category.year), (oldGroup) => {
         if (oldGroup == null) {
           return oldGroup
         }
-        const { groupsById } = oldGroup
-        const nextGroupsById = {
-          ...groupsById,
-          [group.id]: group,
-        }
-
+        const { groupsById, groupsIds } = oldGroup
+        const nextGroupsIds = groupsIds.filter((id) => id !== group.id)
+        const nextGroupsById = { ...groupsById }
+        delete nextGroupsById[group.id]
         return {
-          ...oldGroup,
+          groupsIds: nextGroupsIds,
           groupsById: nextGroupsById,
         }
       })
 
-      enqueueSnackbar(`Actualizado`, { variant: `success` })
+      enqueueSnackbar(`Grupo eliminado exitosamente`, { variant: `success` })
     },
-
     onError: (error) => {
       enqueueSnackbar(error as string, { variant: `error` })
     },

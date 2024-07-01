@@ -1,10 +1,9 @@
 import 'reflect-metadata'
 import { withORM } from 'common/utils/orm'
 import getHandler from 'common/utils/next-connect'
-import { getGroupById, deleteGroup } from 'controllers/groups'
+import { deleteTeam } from 'controllers/teams'
 
 const handler = getHandler()
-handler.get(getGroupById)
-handler.delete(deleteGroup)
+handler.delete(deleteTeam)
 
 export default withORM(handler)

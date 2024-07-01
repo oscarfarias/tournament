@@ -3,3 +3,8 @@ export interface GroupProps {
   groupId: string
   teams?: number
 }
+
+export interface NewGroupProps {
+  name: string
+  year: string
+}
