@@ -90,7 +90,6 @@ const TeamList = ({ team }: { team: Team }) => {
 
   useEffect(() => {
     if (isNumber(debouncedAthletesToAdd) && debouncedAthletesToAdd > 0) {
-      // ADD MORE ATHLETES
       addMoreAthletes
         .mutateAsync({
           athletesToAdd: debouncedAthletesToAdd,

@@ -1,14 +1,16 @@
 import { Grid, Typography } from '@mui/material'
-import { Accordion, TextField } from 'common/components'
+import { Accordion, Modal, TextField } from 'common/components'
 import { useEffect, useState } from 'react'
-import { Group } from 'entities'
+import { Group, Team } from 'entities'
 import TeamList from './TeamList'
 import { useDebounce } from 'common/hooks'
 import { useGroupMutation } from 'common/queries/useGroupMutation'
 import useGroupStore from 'common/hooks/useGroups/store'
+import { useTeamDeleteMutation } from 'common/queries/useTeamMutation'
 
 const GroupView = ({ group }: { group: Group }) => {
   const [teams, setTeams] = useState(group.teams?.length || 0)
+  const [team, setTeam] = useState<Team | null>(null)
 
   const [groupName, setGroupName] = useState(group.name)
 
@@ -37,6 +39,7 @@ const GroupView = ({ group }: { group: Group }) => {
   })
   const debouncedGroupName = useDebounce(groupName, 500)
   const debouncedTeams = useDebounce(teams, 500)
+  const deleteTeam = useTeamDeleteMutation()
 
   useEffect(() => {
     if (debouncedGroupName?.length > 0 && debouncedGroupName !== group.name) {
@@ -70,8 +73,33 @@ const GroupView = ({ group }: { group: Group }) => {
     setGroupName(value)
   }
 
+  const onDeleteTeam = (team: Team) => {
+    setTeam(team)
+  }
+
+  const onConfirmDeleteTeam = () => {
+    if (team == null) {
+      return
+    }
+    setTeam(null)
+    deleteTeam.mutateAsync(team.id).then(() => setTeam(null))
+  }
+
   return (
     <Grid container flexDirection="column">
+      {team ? (
+        <Modal
+          isOpen
+          confirm
+          onConfirm={onConfirmDeleteTeam}
+          onCancel={() => setTeam(null)}
+        >
+          <Typography>
+            ¿Estás seguro que deseas eliminar este equipo?
+          </Typography>
+        </Modal>
+      ) : null}
+
       <Grid
         container
         sx={{
@@ -96,7 +124,12 @@ const GroupView = ({ group }: { group: Group }) => {
       <Grid container mt={2} flexDirection="column" ml={1} gap={1}>
         {group.teams?.length > 0 &&
           group.teams?.map((team) => (
-            <Accordion key={team.id} title={team.name}>
+            <Accordion
+              key={team.id}
+              title={team.name}
+              endIconOnClick={() => onDeleteTeam(team)}
+              endIcon="delete"
+            >
               <TeamList key={team.id} team={team} />
             </Accordion>
           ))}

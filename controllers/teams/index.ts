@@ -65,3 +65,84 @@ export const upsertTeam = async (
 
   successResponse(res, group)
 }
+
+export const deleteTeam = async (
+  req: ExtendedRequest,
+  res: NextApiResponse,
+): Promise<void> => {
+  const { id } = req.query
+  const teamId = id as string
+  const teamRepository = getRepository(Team)
+  const team = await teamRepository.findOne({
+    id: teamId as string,
+  })
+  if (team == null) {
+    errorResponse(res, `No se encontró el equipo con el id ${teamId}`)
+    return
+  }
+  const em = getEntityManager()
+  await em.removeAndFlush(team)
+  const groupRepository = getRepository(Group)
+  const group = await groupRepository.findOne(
+    {
+      id: team.group.id,
+    },
+    {
+      populate: [`teams`, `teams.athletes`, `category`],
+      orderBy: {
+        teams: {
+          order: `ASC`,
+          athletes: {
+            order: `ASC`,
+          },
+        },
+      },
+    },
+  )
+
+  successResponse(res, group)
+}
+
+export const addMoreTeams = async (
+  req: ExtendedRequest,
+  res: NextApiResponse,
+): Promise<void> => {
+  const { teamsToAdd, groupId } = req.body
+  const groupRepository = getRepository(Group)
+  const group = await groupRepository.findOne({
+    id: groupId as string,
+  })
+  if (group == null) {
+    errorResponse(res, `No se encontró el grupo con el id ${groupId}`)
+    return
+  }
+  const nextTeamsQuantity = Number(teamsToAdd)
+  const nextTeams = Array.from({ length: nextTeamsQuantity }).map(
+    (_, index) => ({
+      name: null,
+      order: group.teams.length + index + 1,
+      group: group.id,
+    }),
+  )
+
+  const em = getEntityManager()
+  await em.persistAndFlush(nextTeams)
+  const nextGroup = await groupRepository.findOne(
+    {
+      id: group.id,
+    },
+    {
+      populate: [`teams`, `teams.athletes`, `category`],
+      orderBy: {
+        teams: {
+          order: `ASC`,
+          athletes: {
+            order: `ASC`,
+          },
+        },
+      },
+    },
+  )
+
+  successResponse(res, nextGroup)
+}
