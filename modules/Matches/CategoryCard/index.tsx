@@ -10,14 +10,25 @@ import { HeadCell } from 'common/components/TableMui'
 import { Table } from 'common/components'
 import { useMemo } from 'react'
 import { MIN_PLAYERS } from 'common/config/constants'
+import { useStartMatchMutation } from 'common/queries/useStartMatchMutation'
 
 const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
+  const startMatch = useStartMatchMutation()
+
+  const onHandleStartMatch = ({ id, matchesCount }: GroupListProps) => {
+    if (matchesCount === 0) {
+      startMatch.mutate(id)
+    }
+  }
+
   const data = useMemo(() => {
     return category.groups.map((group) => {
       let isMatchable = false
 
       if (group.teams?.length) {
-        const matchableGroups = group?.teams?.filter((team) => {
+        const teams = group.teams?.map((team) => team)
+
+        isMatchable = teams.every((team) => {
           const athletes = team.athletes?.filter((athlete) => {
             const firstName = athlete.firstName || ``
             const lastName = athlete.lastName || ``
@@ -32,8 +43,6 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
           })
           return athletes?.length >= MIN_PLAYERS
         })
-
-        isMatchable = matchableGroups?.length >= 2
       }
 
       return {
@@ -65,10 +74,13 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
     {
       title: `Acciones`,
       key: `actions`,
-      render: ({ matchesCount, isMatchable }) =>
-        !isMatchable ? (
+
+      render: (data) => {
+        const { matchesCount, isMatchable } = data
+        return !isMatchable ? (
           <Typography sx={{ maxWidth: `200px`, fontSize: `12px !important` }}>
-            Gestione equipos y atletas para gestionar emparejamiento
+            Gestione equipos y atletas para gestionar emparejamiento. La
+            información de todos los equipos y atletas debe estar completa.
           </Typography>
         ) : (
           <Button
@@ -80,10 +92,12 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
               },
             }}
             color="primary"
+            onClick={() => onHandleStartMatch(data)}
           >
             {matchesCount > 0 ? `Gestionar` : `Iniciar emparejamiento`}
           </Button>
-        ),
+        )
+      },
     },
   ]
 

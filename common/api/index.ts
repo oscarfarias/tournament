@@ -96,5 +96,8 @@ const API = {
   addMoreTeams: async (props: AddMoreTeamsProps): Promise<Group> => {
     return axiosInstance.post(`/teams/addMore`, props)
   },
+  startMatch: async (groupId: string): Promise<Group> => {
+    return axiosInstance.post(`/matches/start/${groupId}`)
+  },
 }
 export default API
