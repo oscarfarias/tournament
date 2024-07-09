@@ -1,4 +1,4 @@
-import { Group, Match, Team } from 'entities'
+import { Group, Match } from 'entities'
 import { getEntityManager, getRepository } from 'common/utils/orm'
 import { NextApiResponse } from 'next'
 import { successResponse } from 'common/utils/api'
@@ -49,37 +49,22 @@ export const startMatch = async (
   }
   const matches: RequiredEntityData<Match>[] = []
 
-  const isMatchable = (
-    team: Team,
-    opponent: Team,
-    matches: RequiredEntityData<Match>[],
-  ) => {
-    const nextMatches = [...matches]
-    const canMatch = nextMatches.every((match) => {
-      return (
-        team.id !== opponent.id &&
-        match.teamA !== team.id &&
-        match.teamB !== team.id &&
-        match.teamA !== opponent.id &&
-        match.teamB !== opponent.id
-      )
-    })
+  const teams = group.teams.getItems()
 
-    return canMatch
+  for (let i = 0; i < teams.length; i++) {
+    for (let j = i + 1; j < teams.length; j++) {
+      const team = teams[i]
+      const opponent = teams[j]
+
+      const match = {
+        teamA: team.id,
+        teamB: opponent.id,
+        group: group.id,
+      }
+      matches.push(match)
+    }
   }
 
-  group.teams.getItems().forEach((team) => {
-    group.teams.getItems().forEach((opponent) => {
-      if (isMatchable(team, opponent, matches)) {
-        matches.push({
-          group: group.id,
-          teamA: team.id,
-          teamB: opponent.id,
-        })
-      }
-    })
-  })
-  console.log(`matches:`, matches)
   const em = getEntityManager()
   const groupRef = em.getReference(`Group`, group.id)
   wrap(groupRef).assign({

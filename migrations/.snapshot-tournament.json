@@ -465,24 +465,6 @@
       "schema": "public",
       "indexes": [
         {
-          "columnNames": [
-            "teamAId"
-          ],
-          "composite": false,
-          "keyName": "Matches_teamAId_unique",
-          "primary": false,
-          "unique": true
-        },
-        {
-          "columnNames": [
-            "teamBId"
-          ],
-          "composite": false,
-          "keyName": "Matches_teamBId_unique",
-          "primary": false,
-          "unique": true
-        },
-        {
           "keyName": "Matches_deletedAt_unique",
           "columnNames": [
             "deletedAt"

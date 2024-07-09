@@ -9,16 +9,20 @@ import { CategoryCardProps, GroupListProps } from './types'
 import { HeadCell } from 'common/components/TableMui'
 import { Table } from 'common/components'
 import { useMemo } from 'react'
-import { MIN_PLAYERS } from 'common/config/constants'
+import { MIN_PLAYERS, ROUTES } from 'common/config/constants'
 import { useStartMatchMutation } from 'common/queries/useStartMatchMutation'
+import { useRouter } from 'next/router'
 
 const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
   const startMatch = useStartMatchMutation()
+  const router = useRouter()
 
   const onHandleStartMatch = ({ id, matchesCount }: GroupListProps) => {
     if (matchesCount === 0) {
       startMatch.mutate(id)
+      return
     }
+    router.push(`${ROUTES.MATCHES}/${id}`)
   }
 
   const data = useMemo(() => {

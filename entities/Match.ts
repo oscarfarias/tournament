@@ -1,10 +1,4 @@
-import {
-  PrimaryKey,
-  Entity,
-  Unique,
-  OneToOne,
-  ManyToOne,
-} from '@mikro-orm/core'
+import { PrimaryKey, Entity, Unique, ManyToOne } from '@mikro-orm/core'
 import { CustomBaseEntity } from './BaseEntity'
 import { SoftDeletable } from 'mikro-orm-soft-delete'
 import uuid4 from 'uuid4'
@@ -18,9 +12,9 @@ import { Group } from './Group'
 export class Match extends CustomBaseEntity {
   @PrimaryKey({ type: `uuid`, defaultRaw: `uuid_generate_v4()` })
   id: string = uuid4()
-  @OneToOne({ entity: () => Team })
+  @ManyToOne({ entity: () => Team })
   teamA!: Team
-  @OneToOne({ entity: () => Team })
+  @ManyToOne({ entity: () => Team })
   teamB!: Team
   @ManyToOne({ entity: () => Group })
   group!: Group

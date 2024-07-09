@@ -69,6 +69,9 @@ const API = {
   ): Promise<SerializedResponse<Group, { groups: string }>> => {
     return axiosInstance.get(`/groups/category/${year}`)
   },
+  getGroupById: async (id?: string): Promise<Group> => {
+    return axiosInstance.get(`/groups/${id}`)
+  },
   createGroup: async (props: NewGroupProps): Promise<Group> => {
     return axiosInstance.post(`/groups/new`, props)
   },

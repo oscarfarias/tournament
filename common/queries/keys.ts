@@ -4,4 +4,5 @@ export const QUERY_KEYS = {
   currentUser: [`current-user`],
   categories: [`categories`],
   groups: (year?: string) => [`grups`, year],
+  group: (id?: string) => [`group`, id],
 }
