@@ -1,4 +1,4 @@
-import { Group, Match } from 'entities'
+import { Group, Match, Team } from 'entities'
 import { getEntityManager, getRepository } from 'common/utils/orm'
 import { NextApiResponse } from 'next'
 import { successResponse } from 'common/utils/api'
@@ -39,7 +39,7 @@ export const startMatch = async (
       id: groupId,
     },
     {
-      populate: [`matches`, `teams`],
+      populate: [`matches`, `teams`, `category`],
       populateWhere: PopulateHint.INFER,
     },
   )
@@ -48,23 +48,45 @@ export const startMatch = async (
     return
   }
   const matches: RequiredEntityData<Match>[] = []
+
+  const isMatchable = (
+    team: Team,
+    opponent: Team,
+    matches: RequiredEntityData<Match>[],
+  ) => {
+    const nextMatches = [...matches]
+    const canMatch = nextMatches.every((match) => {
+      return (
+        team.id !== opponent.id &&
+        match.teamA !== team.id &&
+        match.teamB !== team.id &&
+        match.teamA !== opponent.id &&
+        match.teamB !== opponent.id
+      )
+    })
+
+    return canMatch
+  }
+
   group.teams.getItems().forEach((team) => {
     group.teams.getItems().forEach((opponent) => {
-      if (team.id !== opponent.id) {
+      if (isMatchable(team, opponent, matches)) {
         matches.push({
-          group,
-          teamA: team,
-          teamB: opponent,
+          group: group.id,
+          teamA: team.id,
+          teamB: opponent.id,
         })
       }
     })
   })
+  console.log(`matches:`, matches)
   const em = getEntityManager()
   const groupRef = em.getReference(`Group`, group.id)
   wrap(groupRef).assign({
     matches,
   })
   await em.persistAndFlush(groupRef)
+  await em.populate(groupRef as Group, [`category`, `teams`, `teams.athletes`])
 
   successResponse(res, groupRef)
 }

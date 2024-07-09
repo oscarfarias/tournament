@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, useMemo } from 'react'
 import { Grid } from '@mui/material'
 import Layout from '../Layout'
 
@@ -8,7 +8,12 @@ import useCategoriesQuery from 'common/queries/useCategoriesQuery'
 
 const Matches = (): JSX.Element => {
   useCategoriesQuery()
-  const { categories } = useCategoryStore((state) => state)
+  const { categoriesIds, categoriesById } = useCategoryStore((state) => state)
+
+  const categories = useMemo(() => {
+    return categoriesIds.map((id) => categoriesById[id])
+  }, [categoriesIds, categoriesById])
+
   return (
     <Grid container flexDirection="column">
       {categories.map((category) => (
