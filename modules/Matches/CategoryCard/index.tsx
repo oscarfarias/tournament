@@ -53,10 +53,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
         id: group.id,
         groupName: group.name,
         matchesCount: group?.matches?.length || 0,
-        teamsCount: category.groups?.reduce(
-          (acc, group) => acc + group.teams?.length || 0,
-          0,
-        ),
+        teamsCount: group.teams?.length || 0,
         isMatchable,
       }
     })
