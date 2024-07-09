@@ -57,9 +57,22 @@ export const getGroupById = async (
 ): Promise<void> => {
   const { id } = req.query
   const groupRepository = getRepository(Group)
-  const group = await groupRepository.findOne({
-    id,
-  })
+  const group = await groupRepository.findOne(
+    {
+      id,
+    },
+    {
+      populate: [
+        `teams`,
+        `teams.athletes`,
+        `category`,
+        `matches`,
+        `matches.teamA`,
+        `matches.teamB`,
+      ],
+      populateWhere: PopulateHint.INFER,
+    },
+  )
   if (!group) {
     errorResponse(res, `No se encontró el grupo con el id ${id}`)
     return

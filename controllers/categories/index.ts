@@ -11,7 +11,12 @@ export const getCategories: NextApiHandler = async (req, res) => {
   try {
     const categories = await categoryRepositoy.findAll({
       orderBy: { year: `DESC`, groups: { order: `ASC` } },
-      populate: [`groups`, `groups.teams`, `groups.teams.athletes`],
+      populate: [
+        `groups`,
+        `groups.teams`,
+        `groups.teams.athletes`,
+        `groups.matches`,
+      ],
     })
     const [categoriesIds, categoriesById] = serializeCollection({
       entity: categories,

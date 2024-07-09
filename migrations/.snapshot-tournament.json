@@ -450,29 +450,20 @@
           "primary": false,
           "nullable": false,
           "mappedType": "uuid"
+        },
+        "groupId": {
+          "name": "groupId",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
         }
       },
       "name": "Matches",
       "schema": "public",
       "indexes": [
-        {
-          "columnNames": [
-            "teamAId"
-          ],
-          "composite": false,
-          "keyName": "Matches_teamAId_unique",
-          "primary": false,
-          "unique": true
-        },
-        {
-          "columnNames": [
-            "teamBId"
-          ],
-          "composite": false,
-          "keyName": "Matches_teamBId_unique",
-          "primary": false,
-          "unique": true
-        },
         {
           "keyName": "Matches_deletedAt_unique",
           "columnNames": [
@@ -516,6 +507,18 @@
             "id"
           ],
           "referencedTableName": "public.Teams",
+          "updateRule": "cascade"
+        },
+        "Matches_groupId_foreign": {
+          "constraintName": "Matches_groupId_foreign",
+          "columnNames": [
+            "groupId"
+          ],
+          "localTableName": "public.Matches",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Groups",
           "updateRule": "cascade"
         }
       }

@@ -17,6 +17,7 @@ export enum ROUTES {
   INDEX = `/`,
   CATEGORY = `/category`,
   GROUPS = `/groups`,
+  MATCHES = `/matches`,
 }
 
 export enum ROLES {
@@ -38,3 +39,5 @@ export const groupTypes: Option[] = [
     value: 3,
   },
 ]
+
+export const MIN_PLAYERS = 2
