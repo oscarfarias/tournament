@@ -1,8 +1,15 @@
-import { PrimaryKey, Entity, Unique, OneToOne } from '@mikro-orm/core'
+import {
+  PrimaryKey,
+  Entity,
+  Unique,
+  OneToOne,
+  ManyToOne,
+} from '@mikro-orm/core'
 import { CustomBaseEntity } from './BaseEntity'
 import { SoftDeletable } from 'mikro-orm-soft-delete'
 import uuid4 from 'uuid4'
 import { Team } from './Team'
+import { Group } from './Group'
 
 //CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
 @SoftDeletable(() => Match, `deletedAt`, () => new Date())
@@ -15,6 +22,8 @@ export class Match extends CustomBaseEntity {
   teamA!: Team
   @OneToOne({ entity: () => Team })
   teamB!: Team
+  @ManyToOne({ entity: () => Group })
+  group!: Group
 
   constructor() {
     super()

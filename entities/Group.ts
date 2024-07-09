@@ -10,7 +10,7 @@ import {
 import { CustomBaseEntity } from './BaseEntity'
 import { SoftDeletable } from 'mikro-orm-soft-delete'
 import uuid4 from 'uuid4'
-import { Category, Team } from './index'
+import { Category, Match, Team } from './index'
 
 @SoftDeletable(() => Group, `deletedAt`, () => new Date())
 @Entity()
@@ -29,6 +29,11 @@ export class Group extends CustomBaseEntity {
     nullable: true,
   })
   teams = new Collection<Team>(this)
+  @OneToMany(() => Match, (match) => match.group, {
+    orphanRemoval: true,
+    nullable: true,
+  })
+  matches = new Collection<Match>(this)
 
   constructor() {
     super()

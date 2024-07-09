@@ -450,6 +450,15 @@
           "primary": false,
           "nullable": false,
           "mappedType": "uuid"
+        },
+        "groupId": {
+          "name": "groupId",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
         }
       },
       "name": "Matches",
@@ -516,6 +525,18 @@
             "id"
           ],
           "referencedTableName": "public.Teams",
+          "updateRule": "cascade"
+        },
+        "Matches_groupId_foreign": {
+          "constraintName": "Matches_groupId_foreign",
+          "columnNames": [
+            "groupId"
+          ],
+          "localTableName": "public.Matches",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Groups",
           "updateRule": "cascade"
         }
       }
