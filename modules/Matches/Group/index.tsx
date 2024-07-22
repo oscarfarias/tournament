@@ -18,14 +18,24 @@ const Group = (): JSX.Element => {
       key: `teamA`,
     },
     {
+      title: `Goles`,
+      key: `goalsTeamA`,
+    },
+    {
+      title: `Acciones`,
+      render: () => <Button sx={{ maxWidth: `180px` }}>Cargar goles</Button>,
+    },
+    {
       title: `Equipo Oponente`,
       key: `teamB`,
     },
     {
+      title: `Goles`,
+      key: `goalsTeamB`,
+    },
+    {
       title: `Acciones`,
-      render: () => (
-        <Button sx={{ maxWidth: `180px` }}>Cargar resultados</Button>
-      ),
+      render: () => <Button sx={{ maxWidth: `180px` }}>Cargar goles</Button>,
     },
   ]
 
@@ -41,7 +51,9 @@ const Group = (): JSX.Element => {
       return {
         id: match.id,
         teamA: match.teamA.name,
+        goalsTeamA: 0,
         teamB: match.teamB.name,
+        goalsTeamB: 0,
       }
     })
   }, [group])
