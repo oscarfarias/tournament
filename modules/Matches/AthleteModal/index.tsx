@@ -1,7 +1,9 @@
-import { Button, Grid, Typography } from '@mui/material'
+import { Button, Grid, TextField, Typography } from '@mui/material'
 import { Modal, Table } from 'common/components'
 import { AthleteColumns, AthleteModalProps } from './types'
 import useStore from 'stores'
+import useAthletesByTeamQuery from 'common/queries/useAthletesByTeamQuery'
+import { useMemo } from 'react'
 const AthleteModal = ({ teamId }: AthleteModalProps) => {
   const { closeModal } = useStore((state) => state)
   const columns: AthleteColumns[] = [
@@ -16,23 +18,34 @@ const AthleteModal = ({ teamId }: AthleteModalProps) => {
     {
       title: `Goles`,
       key: `goals`,
+      render: ({ goals }) => <TextField defaultValue={goals} />,
     },
     {
       title: `Acciones`,
       render: () => <Button sx={{ maxWidth: `180px` }}>Registrar</Button>,
     },
   ]
-
-  if (!teamId) {
-    return null
-  }
+  const athletesQuery = useAthletesByTeamQuery(teamId)
+  const data = useMemo(() => {
+    if (!athletesQuery.data) {
+      return []
+    }
+    return athletesQuery.data.map((athlete) => {
+      return {
+        id: athlete.id,
+        fullName: `${athlete.firstName} ${athlete.lastName}`,
+        shirtNumber: `${athlete.shirtNumber}`,
+        goals: 0,
+      }
+    })
+  }, [athletesQuery.data])
 
   return (
     <Modal isOpen onClose={closeModal}>
       <Grid container flexDirection="column" gap={2}>
         <Typography>Registrar goles realizados</Typography>
         <Grid item xs={12}>
-          <Table columns={columns} rows={[]} rowsPerPage={4} />
+          <Table columns={columns} rows={data} rowsPerPage={4} />
         </Grid>
         <Grid
           item

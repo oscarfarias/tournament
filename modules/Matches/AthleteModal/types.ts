@@ -6,7 +6,7 @@ export interface AthleteModalProps {
 export interface AthleteList {
   id: string
   fullName: string
-  shirtNumber: number
+  shirtNumber: string
   goals: number
 }
 

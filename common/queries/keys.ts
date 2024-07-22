@@ -5,4 +5,5 @@ export const QUERY_KEYS = {
   categories: [`categories`],
   groups: (year?: string) => [`grups`, year],
   group: (id?: string) => [`group`, id],
+  athletesByTeam: (teamId: string) => [`athletesByTeam`, teamId],
 }

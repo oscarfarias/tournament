@@ -9,7 +9,7 @@ import {
   NewGroupProps,
   SerializedResponse,
 } from 'common/types'
-import { User, Category, Group } from 'entities'
+import { User, Category, Group, Athlete } from 'entities'
 import { AddMoreTeamsProps, TeamProps } from 'common/types/team'
 import { AddMoreAthletesProps, AthleteProps } from 'common/types/athlete'
 
@@ -89,6 +89,9 @@ const API = {
   },
   deleteAthlete: async (id: string): Promise<Group> => {
     return axiosInstance.delete(`/athletes/${id}`)
+  },
+  getAthletesByTeam: async (teamId: string): Promise<Athlete[]> => {
+    return axiosInstance.get(`/athletes/team/${teamId}`)
   },
   addMoreAthletes: async (props: AddMoreAthletesProps): Promise<Group> => {
     return axiosInstance.post(`/athletes/addMore`, props)
