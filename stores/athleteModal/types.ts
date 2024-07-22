@@ -1,6 +1,5 @@
 export interface AthleteModalSlice {
-  isModalOpen: boolean
   teamId: string | null
-  openModal: () => void
+  openModal: (teamId: string) => void
   closeModal: () => void
 }

@@ -1,7 +1,9 @@
-import { Button, Grid } from '@mui/material'
-import { Table } from 'common/components'
-import { AthleteColumns } from './types'
-const AthleteModal = () => {
+import { Button, Grid, Typography } from '@mui/material'
+import { Modal, Table } from 'common/components'
+import { AthleteColumns, AthleteModalProps } from './types'
+import useStore from 'stores'
+const AthleteModal = ({ teamId }: AthleteModalProps) => {
+  const { closeModal } = useStore((state) => state)
   const columns: AthleteColumns[] = [
     {
       title: `Atleta`,
@@ -12,7 +14,7 @@ const AthleteModal = () => {
       key: `shirtNumber`,
     },
     {
-      title: `Goles realizados`,
+      title: `Goles`,
       key: `goals`,
     },
     {
@@ -21,12 +23,38 @@ const AthleteModal = () => {
     },
   ]
 
+  if (!teamId) {
+    return null
+  }
+
   return (
-    <Grid container>
-      <Grid item xs={12}>
-        <Table columns={columns} rows={[]} />
+    <Modal isOpen onClose={closeModal}>
+      <Grid container flexDirection="column" gap={2}>
+        <Typography>Registrar goles realizados</Typography>
+        <Grid item xs={12}>
+          <Table columns={columns} rows={[]} rowsPerPage={4} />
+        </Grid>
+        <Grid
+          item
+          display="flex"
+          flexDirection="row"
+          justifyContent="center"
+          xs={12}
+        >
+          <Button
+            sx={{
+              width: `300px`,
+              '&:hover': {
+                width: `300px`,
+              },
+            }}
+            onClick={closeModal}
+          >
+            Cerrar
+          </Button>
+        </Grid>
       </Grid>
-    </Grid>
+    </Modal>
   )
 }
 
