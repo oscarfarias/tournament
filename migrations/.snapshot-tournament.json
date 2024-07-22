@@ -743,15 +743,6 @@
           "default": "null",
           "mappedType": "datetime"
         },
-        "goals": {
-          "name": "goals",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
-        },
         "average": {
           "name": "average",
           "type": "int",
@@ -992,6 +983,138 @@
             "id"
           ],
           "referencedTableName": "public.Teams",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "mappedType": "uuid"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 0,
+          "default": "now()",
+          "mappedType": "datetime"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 0,
+          "default": "now()",
+          "mappedType": "datetime"
+        },
+        "deletedAt": {
+          "name": "deletedAt",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 0,
+          "default": "null",
+          "mappedType": "datetime"
+        },
+        "goals": {
+          "name": "goals",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "athleteId": {
+          "name": "athleteId",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "statisticId": {
+          "name": "statisticId",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        }
+      },
+      "name": "Goals",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "athleteId"
+          ],
+          "composite": false,
+          "keyName": "Goals_athleteId_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "Goals_deletedAt_unique",
+          "columnNames": [
+            "deletedAt"
+          ],
+          "composite": false,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "Goals_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "Goals_athleteId_foreign": {
+          "constraintName": "Goals_athleteId_foreign",
+          "columnNames": [
+            "athleteId"
+          ],
+          "localTableName": "public.Goals",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Athletes",
+          "updateRule": "cascade"
+        },
+        "Goals_statisticId_foreign": {
+          "constraintName": "Goals_statisticId_foreign",
+          "columnNames": [
+            "statisticId"
+          ],
+          "localTableName": "public.Goals",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Statistics",
           "updateRule": "cascade"
         }
       }
