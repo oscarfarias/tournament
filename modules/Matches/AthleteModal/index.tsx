@@ -12,6 +12,12 @@ interface GoalFieldProps {
   teamId: string
   matchId: string
 }
+interface AthleteData {
+  id: string
+  fullName: string
+  shirtNumber: string
+  goals: number
+}
 
 const GoalField = ({ athleteId, goals, teamId, matchId }: GoalFieldProps) => {
   const registerGoal = useRegisterGoalMutation()
@@ -22,25 +28,35 @@ const GoalField = ({ athleteId, goals, teamId, matchId }: GoalFieldProps) => {
 
   return (
     <Grid container gap={2} flexDirection="row">
-      <TextField value={goal} sx={{ maxWidth: `70px` }} onChange={onChange} />
-      <Button
-        sx={{ maxWidth: `80px` }}
-        onClick={() =>
-          registerGoal.mutate({
-            goals: goal,
-            athleteId,
-            teamId,
-            matchId,
-          })
-        }
-      >
-        Registrar
-      </Button>
+      {goals === 0 ? (
+        <>
+          <TextField
+            value={goal}
+            sx={{ maxWidth: `70px` }}
+            onChange={onChange}
+          />
+          <Button
+            sx={{ maxWidth: `80px` }}
+            onClick={() =>
+              registerGoal.mutate({
+                goals: goal,
+                athleteId,
+                teamId,
+                matchId,
+              })
+            }
+          >
+            Registrar
+          </Button>
+        </>
+      ) : (
+        <Typography>{goals}</Typography>
+      )}
     </Grid>
   )
 }
 
-const AthleteModal = ({ teamId, matchId }: AthleteModalProps) => {
+const AthleteModal = ({ teamId, matchId, match }: AthleteModalProps) => {
   const { closeModal } = useStore((state) => state)
 
   const columns: AthleteColumns[] = [
@@ -66,19 +82,53 @@ const AthleteModal = ({ teamId, matchId }: AthleteModalProps) => {
     },
   ]
   const athletesQuery = useAthletesByTeamQuery(teamId)
-  const data = useMemo(() => {
+  const data: AthleteData[] = useMemo(() => {
     if (!athletesQuery.data) {
       return []
     }
-    return athletesQuery.data.map((athlete) => {
-      return {
-        id: athlete.id,
-        fullName: `${athlete.firstName} ${athlete.lastName}`,
-        shirtNumber: `${athlete.shirtNumber}`,
-        goals: 0,
-      }
-    })
-  }, [athletesQuery.data])
+    const athletesIds: string[] = []
+
+    const nextAthletes: AthleteData[] = []
+    if (match.statisticTeamA && match.statisticTeamA?.team.id === teamId) {
+      const goals = match.statisticTeamA?.goals.map((goal) => goal)
+      goals.forEach((goal) => {
+        athletesIds.push(goal.athlete.id)
+        const athlete: AthleteData = {
+          id: goal.athlete.id,
+          fullName: `${goal.athlete.firstName} ${goal.athlete.lastName}`,
+          shirtNumber: `${goal.athlete.shirtNumber}`,
+          goals: goal.goals,
+        }
+        nextAthletes.push(athlete)
+      })
+    }
+    if (match.statisticTeamB && match.statisticTeamB?.team.id === teamId) {
+      const goals = match.statisticTeamB?.goals.map((goal) => goal)
+      goals.forEach((goal) => {
+        athletesIds.push(goal.athlete.id)
+        const athlete: AthleteData = {
+          id: goal.athlete.id,
+          fullName: `${goal.athlete.firstName} ${goal.athlete.lastName}`,
+          shirtNumber: `${goal.athlete.shirtNumber}`,
+          goals: goal.goals,
+        }
+        nextAthletes.push(athlete)
+      })
+    }
+
+    const filteredAthletes = athletesQuery.data
+      .filter((athlete) => !athletesIds.includes(athlete.id))
+      .map((athlete) => {
+        return {
+          id: athlete.id,
+          fullName: `${athlete.firstName} ${athlete.lastName}`,
+          shirtNumber: `${athlete.shirtNumber}`,
+          goals: 0,
+        }
+      })
+
+    return [...nextAthletes, ...filteredAthletes]
+  }, [athletesQuery.data, match.statisticTeamA, match.statisticTeamB, teamId])
 
   return (
     <Modal isOpen onClose={closeModal}>

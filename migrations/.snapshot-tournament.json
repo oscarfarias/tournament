@@ -691,15 +691,6 @@
           "unique": true
         },
         {
-          "columnNames": [
-            "matchId"
-          ],
-          "composite": false,
-          "keyName": "Statistics_matchId_unique",
-          "primary": false,
-          "unique": true
-        },
-        {
           "keyName": "Statistics_deletedAt_unique",
           "columnNames": [
             "deletedAt"

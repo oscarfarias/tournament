@@ -6,6 +6,7 @@ import {
   OneToOne,
   OneToMany,
   Collection,
+  ManyToOne,
 } from '@mikro-orm/core'
 
 import { CustomBaseEntity } from './BaseEntity'
@@ -27,7 +28,7 @@ export class Statistic extends CustomBaseEntity {
   points?: number
   @OneToOne({ entity: () => Team })
   team!: Team
-  @OneToOne({ entity: () => Match })
+  @ManyToOne({ entity: () => Match })
   match!: Match
 
   @OneToMany(() => Goal, (goal) => goal.statistic, {

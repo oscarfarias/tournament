@@ -120,10 +120,23 @@ const Group = (): JSX.Element => {
     })
   }, [group])
 
+  const match = useMemo(() => {
+    if (serializedMatches == null || !matchId) {
+      return null
+    }
+
+    const [, matchesById] = serializedMatches
+    const match = matchesById[matchId]
+    if (match == null) {
+      return null
+    }
+    return match
+  }, [matchId, serializedMatches])
+
   return (
     <Grid container flexDirection="column">
-      {teamId && matchId ? (
-        <AthleteModal teamId={teamId} matchId={matchId} />
+      {teamId && matchId && match ? (
+        <AthleteModal teamId={teamId} match={match} matchId={matchId} />
       ) : null}
 
       <Typography variant="h5" gutterBottom>
