@@ -1,4 +1,4 @@
-import { Match, Goal } from 'entities'
+import { Match, Goal, Group } from 'entities'
 import { getEntityManager, getRepository } from 'common/utils/orm'
 import { NextApiResponse } from 'next'
 import { successResponse } from 'common/utils/api'
@@ -18,7 +18,7 @@ export const registerGoal = async (
       id: matchId,
     },
     {
-      populate: [`statisticTeamA`, `statisticTeamB`],
+      populate: [`statisticTeamA`, `statisticTeamB`, `group`],
       populateWhere: PopulateHint.INFER,
     },
   )
@@ -50,8 +50,29 @@ export const registerGoal = async (
       statistic: match.statisticTeamA!,
     })
     await em.flush()
+    const groupRepository = getRepository(Group)
+    const group = await groupRepository.findOne(
+      {
+        id: match.group.id,
+      },
+      {
+        populate: [
+          `teams`,
+          `teams.athletes`,
+          `category`,
+          `matches`,
+          `matches.teamA`,
+          `matches.teamB`,
+          `matches.statisticTeamA`,
+          `matches.statisticTeamA.goals`,
+          `matches.statisticTeamB`,
+          `matches.statisticTeamB.goals`,
+        ],
+        populateWhere: PopulateHint.INFER,
+      },
+    )
 
-    successResponse(res, {})
+    successResponse(res, group)
     return
   }
 
@@ -73,5 +94,27 @@ export const registerGoal = async (
   })
   await em.flush()
 
-  successResponse(res, {})
+  const groupRepository = getRepository(Group)
+  const group = await groupRepository.findOne(
+    {
+      id: match.group.id,
+    },
+    {
+      populate: [
+        `teams`,
+        `teams.athletes`,
+        `category`,
+        `matches`,
+        `matches.teamA`,
+        `matches.teamB`,
+        `matches.statisticTeamA`,
+        `matches.statisticTeamA.goals`,
+        `matches.statisticTeamB`,
+        `matches.statisticTeamB.goals`,
+      ],
+      populateWhere: PopulateHint.INFER,
+    },
+  )
+
+  successResponse(res, group)
 }

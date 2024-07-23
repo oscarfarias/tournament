@@ -106,7 +106,7 @@ const API = {
   startMatch: async (groupId: string): Promise<Group> => {
     return axiosInstance.post(`/matches/start/${groupId}`)
   },
-  registerGoal: async (props: RegisterGoalsProps): Promise<any> => {
+  registerGoal: async (props: RegisterGoalsProps): Promise<Group> => {
     return axiosInstance.post(`/goals`, props)
   },
 }
