@@ -459,11 +459,58 @@
           "primary": false,
           "nullable": false,
           "mappedType": "uuid"
+        },
+        "date": {
+          "name": "date",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 0,
+          "default": "now()",
+          "mappedType": "datetime"
+        },
+        "statisticTeamAId": {
+          "name": "statisticTeamAId",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "uuid"
+        },
+        "statisticTeamBId": {
+          "name": "statisticTeamBId",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "uuid"
         }
       },
       "name": "Matches",
       "schema": "public",
       "indexes": [
+        {
+          "columnNames": [
+            "statisticTeamAId"
+          ],
+          "composite": false,
+          "keyName": "Matches_statisticTeamAId_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "columnNames": [
+            "statisticTeamBId"
+          ],
+          "composite": false,
+          "keyName": "Matches_statisticTeamBId_unique",
+          "primary": false,
+          "unique": true
+        },
         {
           "keyName": "Matches_deletedAt_unique",
           "columnNames": [
@@ -519,6 +566,173 @@
             "id"
           ],
           "referencedTableName": "public.Groups",
+          "updateRule": "cascade"
+        },
+        "Matches_statisticTeamAId_foreign": {
+          "constraintName": "Matches_statisticTeamAId_foreign",
+          "columnNames": [
+            "statisticTeamAId"
+          ],
+          "localTableName": "public.Matches",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Statistics",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        },
+        "Matches_statisticTeamBId_foreign": {
+          "constraintName": "Matches_statisticTeamBId_foreign",
+          "columnNames": [
+            "statisticTeamBId"
+          ],
+          "localTableName": "public.Matches",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Statistics",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "mappedType": "uuid"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 0,
+          "default": "now()",
+          "mappedType": "datetime"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 0,
+          "default": "now()",
+          "mappedType": "datetime"
+        },
+        "deletedAt": {
+          "name": "deletedAt",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 0,
+          "default": "null",
+          "mappedType": "datetime"
+        },
+        "average": {
+          "name": "average",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "points": {
+          "name": "points",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "teamId": {
+          "name": "teamId",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "matchId": {
+          "name": "matchId",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        }
+      },
+      "name": "Statistics",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "teamId"
+          ],
+          "composite": false,
+          "keyName": "Statistics_teamId_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "Statistics_deletedAt_unique",
+          "columnNames": [
+            "deletedAt"
+          ],
+          "composite": false,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "Statistics_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "Statistics_teamId_foreign": {
+          "constraintName": "Statistics_teamId_foreign",
+          "columnNames": [
+            "teamId"
+          ],
+          "localTableName": "public.Statistics",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Teams",
+          "updateRule": "cascade"
+        },
+        "Statistics_matchId_foreign": {
+          "constraintName": "Statistics_matchId_foreign",
+          "columnNames": [
+            "matchId"
+          ],
+          "localTableName": "public.Statistics",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Matches",
           "updateRule": "cascade"
         }
       }
@@ -587,24 +801,6 @@
           "length": 0,
           "default": "now()",
           "mappedType": "datetime"
-        },
-        "statisticTeamAId": {
-          "name": "statisticTeamAId",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "uuid"
-        },
-        "statisticTeamBId": {
-          "name": "statisticTeamBId",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "uuid"
         }
       },
       "name": "Games",
@@ -616,24 +812,6 @@
           ],
           "composite": false,
           "keyName": "Games_matchId_unique",
-          "primary": false,
-          "unique": true
-        },
-        {
-          "columnNames": [
-            "statisticTeamAId"
-          ],
-          "composite": false,
-          "keyName": "Games_statisticTeamAId_unique",
-          "primary": false,
-          "unique": true
-        },
-        {
-          "columnNames": [
-            "statisticTeamBId"
-          ],
-          "composite": false,
-          "keyName": "Games_statisticTeamBId_unique",
           "primary": false,
           "unique": true
         },
@@ -668,191 +846,6 @@
             "id"
           ],
           "referencedTableName": "public.Matches",
-          "updateRule": "cascade"
-        },
-        "Games_statisticTeamAId_foreign": {
-          "constraintName": "Games_statisticTeamAId_foreign",
-          "columnNames": [
-            "statisticTeamAId"
-          ],
-          "localTableName": "public.Games",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.Statistics",
-          "deleteRule": "set null",
-          "updateRule": "cascade"
-        },
-        "Games_statisticTeamBId_foreign": {
-          "constraintName": "Games_statisticTeamBId_foreign",
-          "columnNames": [
-            "statisticTeamBId"
-          ],
-          "localTableName": "public.Games",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.Statistics",
-          "deleteRule": "set null",
-          "updateRule": "cascade"
-        }
-      }
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "uuid_generate_v4()",
-          "mappedType": "uuid"
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 0,
-          "default": "now()",
-          "mappedType": "datetime"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 0,
-          "default": "now()",
-          "mappedType": "datetime"
-        },
-        "deletedAt": {
-          "name": "deletedAt",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 0,
-          "default": "null",
-          "mappedType": "datetime"
-        },
-        "goals": {
-          "name": "goals",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
-        },
-        "average": {
-          "name": "average",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
-        },
-        "points": {
-          "name": "points",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
-        },
-        "teamId": {
-          "name": "teamId",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        },
-        "gameId": {
-          "name": "gameId",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        }
-      },
-      "name": "Statistics",
-      "schema": "public",
-      "indexes": [
-        {
-          "columnNames": [
-            "teamId"
-          ],
-          "composite": false,
-          "keyName": "Statistics_teamId_unique",
-          "primary": false,
-          "unique": true
-        },
-        {
-          "columnNames": [
-            "gameId"
-          ],
-          "composite": false,
-          "keyName": "Statistics_gameId_unique",
-          "primary": false,
-          "unique": true
-        },
-        {
-          "keyName": "Statistics_deletedAt_unique",
-          "columnNames": [
-            "deletedAt"
-          ],
-          "composite": false,
-          "primary": false,
-          "unique": true
-        },
-        {
-          "keyName": "Statistics_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "Statistics_teamId_foreign": {
-          "constraintName": "Statistics_teamId_foreign",
-          "columnNames": [
-            "teamId"
-          ],
-          "localTableName": "public.Statistics",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.Teams",
-          "updateRule": "cascade"
-        },
-        "Statistics_gameId_foreign": {
-          "constraintName": "Statistics_gameId_foreign",
-          "columnNames": [
-            "gameId"
-          ],
-          "localTableName": "public.Statistics",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.Games",
           "updateRule": "cascade"
         }
       }
@@ -992,6 +985,138 @@
             "id"
           ],
           "referencedTableName": "public.Teams",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "mappedType": "uuid"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 0,
+          "default": "now()",
+          "mappedType": "datetime"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 0,
+          "default": "now()",
+          "mappedType": "datetime"
+        },
+        "deletedAt": {
+          "name": "deletedAt",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 0,
+          "default": "null",
+          "mappedType": "datetime"
+        },
+        "goals": {
+          "name": "goals",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "athleteId": {
+          "name": "athleteId",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "statisticId": {
+          "name": "statisticId",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        }
+      },
+      "name": "Goals",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "athleteId"
+          ],
+          "composite": false,
+          "keyName": "Goals_athleteId_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "Goals_deletedAt_unique",
+          "columnNames": [
+            "deletedAt"
+          ],
+          "composite": false,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "Goals_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "Goals_athleteId_foreign": {
+          "constraintName": "Goals_athleteId_foreign",
+          "columnNames": [
+            "athleteId"
+          ],
+          "localTableName": "public.Goals",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Athletes",
+          "updateRule": "cascade"
+        },
+        "Goals_statisticId_foreign": {
+          "constraintName": "Goals_statisticId_foreign",
+          "columnNames": [
+            "statisticId"
+          ],
+          "localTableName": "public.Goals",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Statistics",
           "updateRule": "cascade"
         }
       }

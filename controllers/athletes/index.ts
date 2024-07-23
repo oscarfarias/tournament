@@ -162,3 +162,28 @@ export const addMoreAthletes = async (
 
   successResponse(res, group)
 }
+
+export const getAthletesByTeam = async (
+  req: ExtendedRequest,
+  res: NextApiResponse,
+): Promise<void> => {
+  const { id } = req.query
+  const teamId = id as string
+
+  const teamRepository = getRepository(Team)
+  const team = await teamRepository.findOne(
+    {
+      id: teamId,
+    },
+    {
+      populate: [`athletes`],
+      populateWhere: PopulateHint.INFER,
+    },
+  )
+  if (team == null) {
+    errorResponse(res, `No se encontró el equipo con el id ${teamId}`)
+    return
+  }
+
+  successResponse(res, team.athletes)
+}

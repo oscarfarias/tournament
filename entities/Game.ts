@@ -4,7 +4,7 @@ import { CustomBaseEntity } from './BaseEntity'
 import { SoftDeletable } from 'mikro-orm-soft-delete'
 import uuid4 from 'uuid4'
 
-import { Statistic, Match } from './index'
+import { Match } from './index'
 
 //CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
 @SoftDeletable(() => Game, `deletedAt`, () => new Date())
@@ -17,17 +17,6 @@ export class Game extends CustomBaseEntity {
   match!: Match
   @Property({ defaultRaw: `now()` })
   date?: Date
-  @OneToOne(() => Statistic, (statistic) => statistic.game, {
-    owner: true,
-    nullable: true,
-    mappedBy: `game`,
-  })
-  statisticTeamA?: Statistic
-  @OneToOne(() => Statistic, (statistic) => statistic.game, {
-    owner: true,
-    nullable: true,
-  })
-  statisticTeamB?: Statistic
 
   constructor() {
     super()
