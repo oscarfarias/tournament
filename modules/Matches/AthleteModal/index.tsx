@@ -3,9 +3,46 @@ import { Modal, Table } from 'common/components'
 import { AthleteColumns, AthleteModalProps } from './types'
 import useStore from 'stores'
 import useAthletesByTeamQuery from 'common/queries/useAthletesByTeamQuery'
-import { useMemo } from 'react'
-const AthleteModal = ({ teamId }: AthleteModalProps) => {
+import { useMemo, useState } from 'react'
+import { useRegisterGoalMutation } from 'common/queries/useRegisterGoalMutation'
+
+interface GoalFieldProps {
+  athleteId: string
+  goals: number
+  teamId: string
+  matchId: string
+}
+
+const GoalField = ({ athleteId, goals, teamId, matchId }: GoalFieldProps) => {
+  const registerGoal = useRegisterGoalMutation()
+  const [goal, setGoal] = useState(goals)
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGoal(parseInt(e.target.value, 10))
+  }
+
+  return (
+    <Grid container gap={2} flexDirection="row">
+      <TextField value={goal} sx={{ maxWidth: `70px` }} onChange={onChange} />
+      <Button
+        sx={{ maxWidth: `80px` }}
+        onClick={() =>
+          registerGoal.mutate({
+            goals: goal,
+            athleteId,
+            teamId,
+            matchId,
+          })
+        }
+      >
+        Registrar
+      </Button>
+    </Grid>
+  )
+}
+
+const AthleteModal = ({ teamId, matchId }: AthleteModalProps) => {
   const { closeModal } = useStore((state) => state)
+
   const columns: AthleteColumns[] = [
     {
       title: `Atleta`,
@@ -18,11 +55,14 @@ const AthleteModal = ({ teamId }: AthleteModalProps) => {
     {
       title: `Goles`,
       key: `goals`,
-      render: ({ goals }) => <TextField defaultValue={goals} />,
-    },
-    {
-      title: `Acciones`,
-      render: () => <Button sx={{ maxWidth: `180px` }}>Registrar</Button>,
+      render: ({ goals, id }) => (
+        <GoalField
+          athleteId={id}
+          goals={goals}
+          teamId={teamId}
+          matchId={matchId}
+        />
+      ),
     },
   ]
   const athletesQuery = useAthletesByTeamQuery(teamId)
@@ -43,7 +83,14 @@ const AthleteModal = ({ teamId }: AthleteModalProps) => {
   return (
     <Modal isOpen onClose={closeModal}>
       <Grid container flexDirection="column" gap={2}>
-        <Typography>Registrar goles realizados</Typography>
+        <Typography
+          sx={{
+            fontSize: `24px !important`,
+            fontWeight: `bold`,
+          }}
+        >
+          Registrar goles
+        </Typography>
         <Grid item xs={12}>
           <Table columns={columns} rows={data} rowsPerPage={4} />
         </Grid>

@@ -12,6 +12,7 @@ import {
 import { User, Category, Group, Athlete } from 'entities'
 import { AddMoreTeamsProps, TeamProps } from 'common/types/team'
 import { AddMoreAthletesProps, AthleteProps } from 'common/types/athlete'
+import { RegisterGoalsProps } from 'common/types/goal'
 
 const requestHandler = (config: AxiosRequestConfig): unknown => {
   if (config.headers) {
@@ -104,6 +105,9 @@ const API = {
   },
   startMatch: async (groupId: string): Promise<Group> => {
     return axiosInstance.post(`/matches/start/${groupId}`)
+  },
+  registerGoal: async (props: RegisterGoalsProps): Promise<any> => {
+    return axiosInstance.post(`/goals`, props)
   },
 }
 export default API

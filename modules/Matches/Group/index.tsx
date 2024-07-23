@@ -15,7 +15,7 @@ const Group = (): JSX.Element => {
   const router = useRouter()
   const groupId = router.query.groupId as string
   const groupQuery = useGroupQuery(groupId)
-  const { openModal, teamId } = useStore((state) => state)
+  const { openModal, teamId, matchId } = useStore((state) => state)
 
   const group = useMemo(() => {
     return groupQuery.data
@@ -39,7 +39,7 @@ const Group = (): JSX.Element => {
     if (match == null) {
       return
     }
-    openModal(match.teamA.id)
+    openModal({ teamId: match.teamA.id, matchId })
   }
   const selectTeamB = (matchId: string) => {
     if (serializedMatches == null) {
@@ -50,7 +50,7 @@ const Group = (): JSX.Element => {
     if (match == null) {
       return
     }
-    openModal(match.teamB.id)
+    openModal({ teamId: match.teamB.id, matchId })
   }
 
   const columns: HeadCell<MatchListProps>[] = [
@@ -113,7 +113,9 @@ const Group = (): JSX.Element => {
 
   return (
     <Grid container flexDirection="column">
-      {teamId ? <AthleteModal teamId={teamId} /> : null}
+      {teamId && matchId ? (
+        <AthleteModal teamId={teamId} matchId={matchId} />
+      ) : null}
 
       <Typography variant="h5" gutterBottom>
         Emparejamientos {group?.name}

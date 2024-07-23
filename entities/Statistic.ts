@@ -12,7 +12,7 @@ import { CustomBaseEntity } from './BaseEntity'
 import { SoftDeletable } from 'mikro-orm-soft-delete'
 import uuid4 from 'uuid4'
 
-import { Team, Game, Goal } from './index'
+import { Team, Goal, Match } from './index'
 
 //CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
 @SoftDeletable(() => Statistic, `deletedAt`, () => new Date())
@@ -21,14 +21,14 @@ import { Team, Game, Goal } from './index'
 export class Statistic extends CustomBaseEntity {
   @PrimaryKey({ type: `uuid`, defaultRaw: `uuid_generate_v4()` })
   id: string = uuid4()
-  @Property()
-  average!: number
-  @Property()
-  points!: number
+  @Property({ nullable: true })
+  average?: number
+  @Property({ nullable: true })
+  points?: number
   @OneToOne({ entity: () => Team })
   team!: Team
-  @OneToOne({ entity: () => Game })
-  game!: Game
+  @OneToOne({ entity: () => Match })
+  match!: Match
 
   @OneToMany(() => Goal, (goal) => goal.statistic, {
     orphanRemoval: true,

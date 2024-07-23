@@ -1,6 +1,7 @@
 import { HeadCell } from 'common/components/TableMui'
 export interface AthleteModalProps {
   teamId: string
+  matchId: string
 }
 
 export interface AthleteList {
