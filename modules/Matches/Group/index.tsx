@@ -103,10 +103,19 @@ const Group = (): JSX.Element => {
         id: match.id,
         teamAId: match.teamA.id,
         teamA: match.teamA.name,
-        goalsTeamA: 0,
+        goalsTeamA:
+          match.statisticTeamA?.goals.reduce(
+            (acc, goal) => acc + goal.goals,
+            0,
+          ) || 0,
+
         teamBId: match.teamB.id,
         teamB: match.teamB.name,
-        goalsTeamB: 0,
+        goalsTeamB:
+          match.statisticTeamB?.goals.reduce(
+            (acc, goal) => acc + goal.goals,
+            0,
+          ) || 0,
       }
     })
   }, [group])

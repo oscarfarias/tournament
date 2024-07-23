@@ -38,6 +38,8 @@ export const registerGoal = async (
         statisticTeamA: {
           goals: [],
           team: teamId,
+          points: 0,
+          average: 0,
         },
       })
       await em.persistAndFlush(matchRef)
@@ -48,6 +50,7 @@ export const registerGoal = async (
       statistic: match.statisticTeamA!,
     })
     await em.flush()
+
     successResponse(res, {})
     return
   }
@@ -57,6 +60,8 @@ export const registerGoal = async (
       statisticTeamB: {
         goals: [],
         team: teamId,
+        points: 0,
+        average: 0,
       },
     })
     await em.persistAndFlush(matchRef)
