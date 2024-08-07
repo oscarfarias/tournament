@@ -18,6 +18,7 @@ export enum ROUTES {
   CATEGORY = `/category`,
   GROUPS = `/groups`,
   MATCHES = `/matches`,
+  RESULTS = `/results`,
 }
 
 export enum ROLES {
