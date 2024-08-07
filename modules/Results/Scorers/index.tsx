@@ -32,7 +32,6 @@ const Scorers = () => {
       })
       .sort((a, b) => b.goals - a.goals)
   }, [scorersByTeamQuery?.data])
-  console.log(`scorersByTeamQuery?.data:`, scorersByTeamQuery?.data)
 
   const columns: HeadCell<ScorersListProps>[] = [
     {
