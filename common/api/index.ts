@@ -15,6 +15,8 @@ import { AddMoreAthletesProps, AthleteProps } from 'common/types/athlete'
 import { RegisterGoalsProps } from 'common/types/goal'
 import { StatisticResponse } from 'common/types/statistic'
 
+import { ScorerResponse } from 'common/types/scorer'
+
 const requestHandler = (config: AxiosRequestConfig): unknown => {
   if (config.headers) {
     if (typeof window !== `undefined`) {
@@ -114,6 +116,9 @@ const API = {
     groupId: string,
   ): Promise<StatisticResponse> => {
     return axiosInstance.get(`/statistics/${groupId}`)
+  },
+  getScorersByTeamId: async (teamId: string): Promise<ScorerResponse> => {
+    return axiosInstance.get(`/scorers/${teamId}`)
   },
 }
 export default API

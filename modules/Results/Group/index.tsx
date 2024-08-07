@@ -8,6 +8,7 @@ import { StatisticListProps } from './types'
 import { Table } from 'common/components'
 
 import useStatisticsByGroupQuery from 'common/queries/useStatisticsByGroupQuery'
+import { ROUTES } from 'common/config/constants'
 
 const Group = (): JSX.Element => {
   const router = useRouter()
@@ -18,6 +19,10 @@ const Group = (): JSX.Element => {
   const group = useMemo(() => {
     return groupQuery.data
   }, [groupQuery.data])
+
+  const onSeeScorers = (teamId: string) => {
+    router.push(`${ROUTES.RESULTS}/scorers/${teamId}`)
+  }
 
   const columns: HeadCell<StatisticListProps>[] = [
     {
@@ -39,7 +44,14 @@ const Group = (): JSX.Element => {
     },
     {
       title: `Acciones`,
-      render: () => <Button sx={{ maxWidth: `180px` }}>Ver Resultados</Button>,
+      render: (data) => (
+        <Button
+          onClick={() => onSeeScorers(data.id)}
+          sx={{ maxWidth: `180px` }}
+        >
+          Ver goleadores
+        </Button>
+      ),
     },
   ]
 

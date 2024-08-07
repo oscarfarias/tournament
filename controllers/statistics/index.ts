@@ -1,4 +1,4 @@
-import { Match, Goal, Group, Statistic } from 'entities'
+import { Match, Goal, Group, Statistic, Team } from 'entities'
 import { getEntityManager, getRepository } from 'common/utils/orm'
 import { NextApiResponse } from 'next'
 import { successResponse } from 'common/utils/api'
@@ -6,6 +6,7 @@ import { errorResponse } from 'common/utils/api'
 import { ExtendedRequest } from 'common/utils/next-connect'
 import { PopulateHint, wrap } from '@mikro-orm/core'
 import { AugmentedStatistic } from 'common/types/statistic'
+import { Scorer } from 'common/types/scorer'
 
 export const registerGoal = async (
   req: ExtendedRequest,
@@ -279,5 +280,61 @@ export const getStatisticsByGroup = async (
     group,
     teamsIds: filteredTeamsIds,
     teamsById,
+  })
+}
+
+export const getScorersByTeamId = async (
+  req: ExtendedRequest,
+  res: NextApiResponse,
+): Promise<void> => {
+  const { teamId } = req.query
+
+  const teamRepository = getRepository(Team)
+  const team = await teamRepository.findOne(
+    {
+      id: teamId,
+    },
+    {
+      populateWhere: PopulateHint.INFER,
+    },
+  )
+  if (team == null) {
+    errorResponse(res, `No se encontró el equipo con el id ${teamId}`)
+    return
+  }
+
+  const statisticRepository = getRepository(Statistic)
+  const statistics = await statisticRepository.find(
+    {
+      team: teamId,
+    },
+    {
+      populate: [`team`, `goals`, `goals.athlete`],
+      populateWhere: PopulateHint.INFER,
+    },
+  )
+
+  const athletesIds: string[] = []
+  const athletesById: Record<string, Scorer> = {}
+  statistics.forEach((statistic) => {
+    const goals = statistic.goals?.getItems() || []
+    goals.forEach((goal) => {
+      if (athletesById[goal.athlete.id] == null) {
+        athletesIds.push(goal.athlete.id)
+        athletesById[goal.athlete.id] = {
+          id: goal.athlete.id,
+          athlete: goal.athlete,
+          goals: goal.goals,
+        }
+      } else {
+        athletesById[goal.athlete.id].goals += goal.goals
+      }
+    })
+  })
+
+  successResponse(res, {
+    team,
+    athletesIds,
+    athletesById,
   })
 }
