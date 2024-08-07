@@ -4,35 +4,38 @@ import Layout from 'modules/Layout'
 import useGroupQuery from 'common/queries/useGroupQuery'
 import { useRouter } from 'next/router'
 import { HeadCell } from 'common/components/TableMui'
-import { MatchListProps } from './types'
+import { StatisticListProps } from './types'
 import { Table } from 'common/components'
+
+import useStatisticsByGroupQuery from 'common/queries/useStatisticsByGroupQuery'
 
 const Group = (): JSX.Element => {
   const router = useRouter()
   const groupId = router.query.groupId as string
   const groupQuery = useGroupQuery(groupId)
+  const statisticsByGroupQuery = useStatisticsByGroupQuery(groupId)
 
   const group = useMemo(() => {
     return groupQuery.data
   }, [groupQuery.data])
 
-  const columns: HeadCell<MatchListProps>[] = [
+  const columns: HeadCell<StatisticListProps>[] = [
     {
-      title: `Equipo Jugador`,
-      key: `teamA`,
+      title: `Equipo`,
+      key: `team`,
     },
     {
-      title: `Goles`,
-      key: `goalsTeamA`,
+      title: `Goles a favor`,
+      key: `goalsInFavor`,
     },
 
     {
-      title: `Equipo Oponente`,
-      key: `teamB`,
+      title: `Goles en contra`,
+      key: `goalsAgainst`,
     },
     {
-      title: `Goles`,
-      key: `goalsTeamB`,
+      title: `Diferencia`,
+      key: `difference`,
     },
     {
       title: `Acciones`,
@@ -41,30 +44,24 @@ const Group = (): JSX.Element => {
   ]
 
   const data = useMemo(() => {
-    if (!group) {
+    if (!statisticsByGroupQuery?.data) {
       return []
     }
-    return group.matches.map((match) => {
-      return {
-        id: match.id,
-        teamAId: match.teamA.id,
-        teamA: match.teamA.name,
-        goalsTeamA:
-          match.statisticTeamA?.goals.reduce(
-            (acc, goal) => acc + goal.goals,
-            0,
-          ) || 0,
+    const { teamsIds, teamsById } = statisticsByGroupQuery.data
 
-        teamBId: match.teamB.id,
-        teamB: match.teamB.name,
-        goalsTeamB:
-          match.statisticTeamB?.goals.reduce(
-            (acc, goal) => acc + goal.goals,
-            0,
-          ) || 0,
-      }
-    })
-  }, [group])
+    return teamsIds
+      .map((teamId) => {
+        const team = teamsById[teamId]
+        return {
+          id: teamId,
+          team: team?.team?.name,
+          goalsInFavor: team?.goalsInFavor || 0,
+          goalsAgainst: team?.goalsAgainst || 0,
+          difference: team?.difference || 0,
+        }
+      })
+      .sort((a, b) => b.difference - a.difference)
+  }, [statisticsByGroupQuery?.data])
 
   return (
     <Grid container flexDirection="column">

@@ -1,10 +1,11 @@
-import { Match, Goal, Group } from 'entities'
+import { Match, Goal, Group, Statistic } from 'entities'
 import { getEntityManager, getRepository } from 'common/utils/orm'
 import { NextApiResponse } from 'next'
 import { successResponse } from 'common/utils/api'
 import { errorResponse } from 'common/utils/api'
 import { ExtendedRequest } from 'common/utils/next-connect'
 import { PopulateHint, wrap } from '@mikro-orm/core'
+import { AugmentedStatistic } from 'common/types/statistic'
 
 export const registerGoal = async (
   req: ExtendedRequest,
@@ -192,4 +193,91 @@ export const registerGoal = async (
   )
 
   successResponse(res, group)
+}
+
+export const getStatisticsByGroup = async (
+  req: ExtendedRequest,
+  res: NextApiResponse,
+): Promise<void> => {
+  const { groupId } = req.query
+
+  const groupRepository = getRepository(Group)
+  const group = await groupRepository.findOne(
+    {
+      id: groupId,
+    },
+    {
+      populate: [`teams`, `teams.athletes`, `category`, `matches`],
+      populateWhere: PopulateHint.INFER,
+    },
+  )
+  if (group == null) {
+    errorResponse(res, `No se encontró el grupo con el id ${groupId}`)
+    return
+  }
+  const teams = group.teams.getItems()
+  const teamsIds = teams.map((team) => team.id)
+  const statisticRepository = getRepository(Statistic)
+  const statistics = await statisticRepository.find(
+    {
+      team: { $in: teamsIds },
+    },
+    {
+      populate: [`team`, `goals`],
+      populateWhere: PopulateHint.INFER,
+      orderBy: { difference: `DESC` },
+    },
+  )
+  const teamsById: Record<string, AugmentedStatistic> = {}
+
+  statistics.forEach((statistic) => {
+    if (teamsById[statistic.team.id] == null) {
+      const prevStatistic: AugmentedStatistic = {
+        ...statistic,
+        goals: statistic.goals?.getItems(),
+      }
+      const prevGoalsInFavor = prevStatistic.goalsInFavor || 0
+      const prevGoalsAgainst = prevStatistic.goalsAgainst || 0
+      const prevDifference = prevStatistic.difference || 0
+
+      teamsById[statistic.team.id] = {
+        ...prevStatistic,
+        goalsInFavor: prevGoalsInFavor,
+        goalsAgainst: prevGoalsAgainst,
+        difference: prevDifference,
+      }
+    } else {
+      const prevStatistic: AugmentedStatistic = {
+        ...teamsById[statistic.team.id],
+        goals: statistic.goals?.getItems(),
+      }
+      const prevGoalsInFavor = prevStatistic.goalsInFavor || 0
+      const prevGoalsAgainst = prevStatistic.goalsAgainst || 0
+      const prevDifference = prevStatistic.difference || 0
+      const nextGoalsInFavor = statistic.goalsInFavor || 0
+      const nextGoalsAgainst = statistic.goalsAgainst || 0
+      const nextDifference = statistic.difference || 0
+      const prevGoals = prevStatistic.goals || []
+      const nextGoals = statistic.goals.getItems() || []
+
+      const nextStatistic: AugmentedStatistic = {
+        ...prevStatistic,
+        goalsInFavor: prevGoalsInFavor + nextGoalsInFavor,
+        goalsAgainst: prevGoalsAgainst + nextGoalsAgainst,
+        difference: prevDifference + nextDifference,
+        goals: [...prevGoals, ...nextGoals],
+      }
+      teamsById[statistic.team.id] = { ...nextStatistic }
+    }
+  })
+
+  const filteredTeamsIds = teamsIds.filter(
+    (teamId) => teamsById[teamId] != null,
+  )
+
+  successResponse(res, {
+    group,
+    teamsIds: filteredTeamsIds,
+    teamsById,
+  })
 }

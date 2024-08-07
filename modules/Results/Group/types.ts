@@ -5,3 +5,11 @@ export interface MatchListProps {
   teamB: string
   goalsTeamB: number | null
 }
+
+export interface StatisticListProps {
+  id: string
+  team: string
+  goalsInFavor: number
+  goalsAgainst: number
+  difference: number
+}

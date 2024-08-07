@@ -13,6 +13,7 @@ import { User, Category, Group, Athlete } from 'entities'
 import { AddMoreTeamsProps, TeamProps } from 'common/types/team'
 import { AddMoreAthletesProps, AthleteProps } from 'common/types/athlete'
 import { RegisterGoalsProps } from 'common/types/goal'
+import { StatisticResponse } from 'common/types/statistic'
 
 const requestHandler = (config: AxiosRequestConfig): unknown => {
   if (config.headers) {
@@ -108,6 +109,11 @@ const API = {
   },
   registerGoal: async (props: RegisterGoalsProps): Promise<Group> => {
     return axiosInstance.post(`/goals`, props)
+  },
+  getStatisticsByGroupId: async (
+    groupId: string,
+  ): Promise<StatisticResponse> => {
+    return axiosInstance.get(`/statistics/${groupId}`)
   },
 }
 export default API
