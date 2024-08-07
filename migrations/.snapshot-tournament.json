@@ -659,6 +659,33 @@
           "nullable": true,
           "mappedType": "integer"
         },
+        "goalsAgainst": {
+          "name": "goalsAgainst",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "goalsInFavor": {
+          "name": "goalsInFavor",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "difference": {
+          "name": "difference",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
         "teamId": {
           "name": "teamId",
           "type": "uuid",

@@ -31,7 +31,7 @@ export const registerGoal = async (
   const em = getEntityManager()
 
   const isTeamA = match.teamA.id === teamId
-  const matchRef = em.getReference(Match, match.id)
+  let matchRef = em.getReference(Match, match.id)
   if (isTeamA) {
     if (match.statisticTeamA == null) {
       wrap(matchRef).assign({
@@ -50,6 +50,44 @@ export const registerGoal = async (
       statistic: match.statisticTeamA!,
     })
     await em.flush()
+    matchRef = em.getReference(Match, match.id)
+    await em.populate(matchRef, [
+      `statisticTeamA`,
+      `statisticTeamA.goals`,
+      `statisticTeamB`,
+      `statisticTeamB.goals`,
+      `group`,
+    ])
+
+    const goalsCount =
+      matchRef.statisticTeamA?.goals
+        .getItems()
+        .reduce((acc, goal) => acc + goal.goals, 0) ||
+      0 ||
+      0
+    const goalsAgainst =
+      matchRef.statisticTeamB?.goals
+        .getItems()
+        .reduce((acc, goal) => acc + goal.goals, 0) ||
+      0 ||
+      0
+
+    wrap(matchRef.statisticTeamA).assign({
+      goalsInFavor: goalsCount,
+      goalsAgainst,
+      difference: goalsCount - goalsAgainst,
+    })
+
+    if (matchRef.statisticTeamB) {
+      wrap(matchRef.statisticTeamB).assign({
+        goalsInFavor: goalsAgainst,
+        goalsAgainst: goalsCount,
+        difference: goalsAgainst - goalsCount,
+      })
+    }
+
+    await em.persistAndFlush(matchRef)
+
     const groupRepository = getRepository(Group)
     const group = await groupRepository.findOne(
       {
@@ -93,6 +131,41 @@ export const registerGoal = async (
     statistic: match.statisticTeamB!,
   })
   await em.flush()
+
+  matchRef = em.getReference(Match, match.id)
+  await em.populate(matchRef, [
+    `statisticTeamA`,
+    `statisticTeamA.goals`,
+    `statisticTeamB`,
+    `statisticTeamB.goals`,
+    `group`,
+  ])
+
+  const goalsCount =
+    matchRef.statisticTeamB?.goals
+      .getItems()
+      .reduce((acc, goal) => acc + goal.goals, 0) || 0
+  const goalsAgainst =
+    matchRef.statisticTeamA?.goals
+      .getItems()
+      .reduce((acc, goal) => acc + goal.goals, 0) ||
+    0 ||
+    0
+
+  wrap(matchRef.statisticTeamB).assign({
+    goalsInFavor: goalsCount,
+    goalsAgainst,
+    difference: goalsCount - goalsAgainst,
+  })
+  if (matchRef.statisticTeamA) {
+    wrap(matchRef.statisticTeamA).assign({
+      goalsInFavor: goalsAgainst,
+      goalsAgainst: goalsCount,
+      difference: goalsAgainst - goalsCount,
+    })
+  }
+
+  await em.persistAndFlush(matchRef)
 
   const groupRepository = getRepository(Group)
   const group = await groupRepository.findOne(

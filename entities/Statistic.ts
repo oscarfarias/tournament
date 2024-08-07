@@ -26,6 +26,12 @@ export class Statistic extends CustomBaseEntity {
   average?: number
   @Property({ nullable: true })
   points?: number
+  @Property({ nullable: true })
+  goalsAgainst?: number
+  @Property({ nullable: true })
+  goalsInFavor?: number
+  @Property({ nullable: true })
+  difference?: number
   @OneToOne({ entity: () => Team })
   team!: Team
   @ManyToOne({ entity: () => Match })
