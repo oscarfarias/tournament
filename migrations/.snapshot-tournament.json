@@ -709,15 +709,6 @@
       "schema": "public",
       "indexes": [
         {
-          "columnNames": [
-            "teamId"
-          ],
-          "composite": false,
-          "keyName": "Statistics_teamId_unique",
-          "primary": false,
-          "unique": true
-        },
-        {
           "keyName": "Statistics_deletedAt_unique",
           "columnNames": [
             "deletedAt"
@@ -1092,15 +1083,6 @@
       "name": "Goals",
       "schema": "public",
       "indexes": [
-        {
-          "columnNames": [
-            "athleteId"
-          ],
-          "composite": false,
-          "keyName": "Goals_athleteId_unique",
-          "primary": false,
-          "unique": true
-        },
         {
           "keyName": "Goals_deletedAt_unique",
           "columnNames": [

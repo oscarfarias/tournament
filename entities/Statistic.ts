@@ -3,7 +3,6 @@ import {
   Entity,
   Property,
   Unique,
-  OneToOne,
   OneToMany,
   Collection,
   ManyToOne,
@@ -32,7 +31,7 @@ export class Statistic extends CustomBaseEntity {
   goalsInFavor?: number
   @Property({ nullable: true })
   difference?: number
-  @OneToOne({ entity: () => Team })
+  @ManyToOne({ entity: () => Team })
   team!: Team
   @ManyToOne({ entity: () => Match })
   match!: Match
