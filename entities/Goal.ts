@@ -3,7 +3,6 @@ import {
   Entity,
   Property,
   Unique,
-  OneToOne,
   ManyToOne,
 } from '@mikro-orm/core'
 
@@ -22,7 +21,7 @@ export class Goal extends CustomBaseEntity {
   id: string = uuid4()
   @Property()
   goals!: number
-  @OneToOne({ entity: () => Athlete })
+  @ManyToOne({ entity: () => Athlete })
   athlete!: Athlete
   @ManyToOne({ entity: () => Statistic })
   statistic!: Statistic

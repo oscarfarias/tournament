@@ -10,4 +10,5 @@ export interface SidebarMenu {
 export const menu: SidebarMenu[] = [
   { text: `Manejo de competencia`, icon: `editRounded`, path: ROUTES.INDEX },
   { text: `Emparejamientos`, icon: `group`, path: ROUTES.MATCHES },
+  { text: `Resultados`, icon: `barChart`, path: ROUTES.RESULTS },
 ]

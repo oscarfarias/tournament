@@ -659,6 +659,33 @@
           "nullable": true,
           "mappedType": "integer"
         },
+        "goalsAgainst": {
+          "name": "goalsAgainst",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "goalsInFavor": {
+          "name": "goalsInFavor",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "difference": {
+          "name": "difference",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
         "teamId": {
           "name": "teamId",
           "type": "uuid",
@@ -681,15 +708,6 @@
       "name": "Statistics",
       "schema": "public",
       "indexes": [
-        {
-          "columnNames": [
-            "teamId"
-          ],
-          "composite": false,
-          "keyName": "Statistics_teamId_unique",
-          "primary": false,
-          "unique": true
-        },
         {
           "keyName": "Statistics_deletedAt_unique",
           "columnNames": [
@@ -1065,15 +1083,6 @@
       "name": "Goals",
       "schema": "public",
       "indexes": [
-        {
-          "columnNames": [
-            "athleteId"
-          ],
-          "composite": false,
-          "keyName": "Goals_athleteId_unique",
-          "primary": false,
-          "unique": true
-        },
         {
           "keyName": "Goals_deletedAt_unique",
           "columnNames": [
