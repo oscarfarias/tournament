@@ -12,4 +12,5 @@ export interface StatisticListProps {
   goalsInFavor: number
   goalsAgainst: number
   difference: number
+  points: number
 }

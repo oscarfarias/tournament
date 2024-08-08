@@ -43,6 +43,10 @@ const Group = (): JSX.Element => {
       key: `difference`,
     },
     {
+      title: `Puntos`,
+      key: `points`,
+    },
+    {
       title: `Acciones`,
       render: (data) => (
         <Button
@@ -70,9 +74,10 @@ const Group = (): JSX.Element => {
           goalsInFavor: team?.goalsInFavor || 0,
           goalsAgainst: team?.goalsAgainst || 0,
           difference: team?.difference || 0,
+          points: team?.points || 0,
         }
       })
-      .sort((a, b) => b.difference - a.difference)
+      .sort((a, b) => b.difference - a.difference || b.points - a.points)
   }, [statisticsByGroupQuery?.data])
 
   return (
