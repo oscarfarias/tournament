@@ -19,7 +19,7 @@ export const userLogin: NextApiHandler = async (req, res) => {
   const userRepository = getRepository(User)
   const user = await userRepository.findOne(
     { username },
-    { populate: [`password`] },
+    { populate: [`password`, `role`] },
   )
   if (user && bcrypt.compareSync(password, user?.password)) {
     const token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET!)

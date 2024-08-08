@@ -1,5 +1,5 @@
 import { IconProps } from 'common/components/Icon'
-import { ROUTES } from 'common/config/constants'
+import { ROLES, ROUTES } from 'common/config/constants'
 
 export interface SidebarMenu {
   text: string
@@ -12,3 +12,13 @@ export const menu: SidebarMenu[] = [
   { text: `Emparejamientos`, icon: `group`, path: ROUTES.MATCHES },
   { text: `Resultados`, icon: `barChart`, path: ROUTES.RESULTS },
 ]
+
+export const menuByRole = (role: string): SidebarMenu[] => {
+  if (role === ROLES.ADMIN) {
+    return menu
+  }
+  return [
+    { text: `Emparejamientos`, icon: `group`, path: ROUTES.MATCHES },
+    { text: `Resultados`, icon: `barChart`, path: ROUTES.RESULTS },
+  ]
+}

@@ -8,12 +8,17 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import { drawerWidth } from 'common/config/constants'
-import { menu } from './menu'
+import { menuByRole } from './menu'
 import { Icon } from 'common/components'
 import { useRouter } from 'next/router'
+import useAuth from 'common/hooks/useAuth'
 
 const Sidebar = (): JSX.Element => {
   const router = useRouter()
+  const { user } = useAuth()
+
+  const menu = menuByRole(user?.role?.name ?? ``)
+
   return (
     <Drawer
       sx={{
