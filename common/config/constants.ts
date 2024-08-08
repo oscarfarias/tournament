@@ -26,6 +26,8 @@ export enum ROLES {
   SUPERVISOR = `Supervisor`,
 }
 
+export const supervisorRoutes: string[] = [ROUTES.MATCHES, ROUTES.RESULTS]
+
 export const groupTypes: Option[] = [
   {
     label: `Grupo único`,

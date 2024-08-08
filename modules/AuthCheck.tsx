@@ -1,10 +1,10 @@
-import { TOKEN_KEY } from 'common/config/constants'
+import { ROLES, TOKEN_KEY } from 'common/config/constants'
 import useAuth from 'common/hooks/useAuth'
 import { useCurrentUserQuery } from 'common/queries/useCurrentUserQuery'
 import { User } from 'entities'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { ROUTES } from 'common/config/constants'
+import { ROUTES, supervisorRoutes } from 'common/config/constants'
 import Loading from './Loading'
 
 const publicRoutes: string[] = [`${ROUTES.LOGIN}`]
@@ -54,8 +54,18 @@ const AuthCheck = ({ children }: AuthCheckProps): JSX.Element => {
   if (!isAuthorizedUser) {
     return <Redirect route={ROUTES.LOGIN} />
   }
-  if (isLogin && user) {
+  if (isLogin && user && user.role?.name === ROLES.ADMIN) {
     return <Redirect route={ROUTES.INDEX} />
+  }
+  if (isLogin && user && user.role?.name === ROLES.SUPERVISOR) {
+    return <Redirect route={ROUTES.MATCHES} />
+  }
+  if (
+    user &&
+    user.role?.name === ROLES.SUPERVISOR &&
+    !supervisorRoutes.includes(router.pathname)
+  ) {
+    return <Redirect route={ROUTES.MATCHES} />
   }
 
   return <>{children}</>
