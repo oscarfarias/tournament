@@ -78,6 +78,8 @@ export const registerGoal = async (
       goalsInFavor: goalsCount,
       goalsAgainst,
       difference: goalsCount - goalsAgainst,
+      points:
+        goalsCount > goalsAgainst ? 3 : goalsCount === goalsAgainst ? 1 : 0,
     })
 
     if (matchRef.statisticTeamB) {
@@ -85,6 +87,8 @@ export const registerGoal = async (
         goalsInFavor: goalsAgainst,
         goalsAgainst: goalsCount,
         difference: goalsAgainst - goalsCount,
+        points:
+          goalsAgainst > goalsCount ? 3 : goalsAgainst === goalsCount ? 1 : 0,
       })
     }
 
@@ -158,12 +162,15 @@ export const registerGoal = async (
     goalsInFavor: goalsCount,
     goalsAgainst,
     difference: goalsCount - goalsAgainst,
+    points: goalsCount > goalsAgainst ? 3 : goalsCount === goalsAgainst ? 1 : 0,
   })
   if (matchRef.statisticTeamA) {
     wrap(matchRef.statisticTeamA).assign({
       goalsInFavor: goalsAgainst,
       goalsAgainst: goalsCount,
       difference: goalsAgainst - goalsCount,
+      points:
+        goalsAgainst > goalsCount ? 3 : goalsAgainst === goalsCount ? 1 : 0,
     })
   }
 
@@ -240,12 +247,14 @@ export const getStatisticsByGroup = async (
       const prevGoalsInFavor = prevStatistic.goalsInFavor || 0
       const prevGoalsAgainst = prevStatistic.goalsAgainst || 0
       const prevDifference = prevStatistic.difference || 0
+      const prevPoints = prevStatistic.points || 0
 
       teamsById[statistic.team.id] = {
         ...prevStatistic,
         goalsInFavor: prevGoalsInFavor,
         goalsAgainst: prevGoalsAgainst,
         difference: prevDifference,
+        points: prevPoints,
       }
     } else {
       const prevStatistic: AugmentedStatistic = {
@@ -255,11 +264,13 @@ export const getStatisticsByGroup = async (
       const prevGoalsInFavor = prevStatistic.goalsInFavor || 0
       const prevGoalsAgainst = prevStatistic.goalsAgainst || 0
       const prevDifference = prevStatistic.difference || 0
+      const prevPoints = prevStatistic.points || 0
       const nextGoalsInFavor = statistic.goalsInFavor || 0
       const nextGoalsAgainst = statistic.goalsAgainst || 0
       const nextDifference = statistic.difference || 0
       const prevGoals = prevStatistic.goals || []
       const nextGoals = statistic.goals.getItems() || []
+      const nextPoints = statistic.points || 0
 
       const nextStatistic: AugmentedStatistic = {
         ...prevStatistic,
@@ -267,6 +278,7 @@ export const getStatisticsByGroup = async (
         goalsAgainst: prevGoalsAgainst + nextGoalsAgainst,
         difference: prevDifference + nextDifference,
         goals: [...prevGoals, ...nextGoals],
+        points: prevPoints + nextPoints,
       }
       teamsById[statistic.team.id] = { ...nextStatistic }
     }
